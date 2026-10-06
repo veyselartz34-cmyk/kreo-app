@@ -88,9 +88,9 @@ export default function Pricing() {
               </div>
               <p className="text-sm text-zinc-700 mb-8">+ satış başına %4 komisyon</p>
               
-              <button type="button" className="w-full py-3 px-4 rounded-xl font-medium text-sm text-[#1A1A1A] bg-[#1A1A1A]/5 border border-black/10 hover:bg-[#1A1A1A]/10 transition-colors mb-8">
+              <a href="/register" className="w-full py-3 px-4 rounded-xl font-medium text-sm text-[#1A1A1A] bg-[#1A1A1A]/5 border border-black/10 hover:bg-[#1A1A1A]/10 transition-colors mb-8 text-center block">
                 Ücretsiz Denemeye Başla
-              </button>
+              </a>
 
               <div className="space-y-4 flex-1">
                 {[
@@ -140,9 +140,9 @@ export default function Pricing() {
               </div>
               <p className="text-sm text-zinc-600 mb-8">+ satış başına sadece %1.5 komisyon</p>
               
-              <button type="button" className="w-full py-3 px-4 rounded-xl font-medium text-sm text-black bg-[#D32F2F] hover:bg-[#C62828] hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(211,47,47,0.4)] mb-8">
+              <a href="/register" className="w-full py-3 px-4 rounded-xl font-semibold text-sm text-white bg-[#D32F2F] hover:bg-[#C62828] hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(211,47,47,0.4)] mb-8 text-center block">
                 Pro Plan'a Geç
-              </button>
+              </a>
 
               <div className="space-y-4 flex-1">
                 {[

@@ -113,13 +113,13 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
           className="mt-10 flex flex-col sm:flex-row items-center gap-4"
         >
-          <button type="button" className="px-8 py-3.5 bg-[#D32F2F] text-white font-semibold rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(211,47,47,0.3)] flex items-center gap-2">
+          <a href="/register" className="px-8 py-3.5 bg-[#D32F2F] text-white font-semibold rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(211,47,47,0.3)] flex items-center gap-2">
             Ücretsiz Başla
             <ArrowRight className="w-4 h-4" />
-          </button>
-          <button type="button" className="px-8 py-3.5 bg-[#1A1A1A]/5 border border-black/10 text-[#1A1A1A] font-medium rounded-full hover:bg-[#1A1A1A]/10 transition-colors">
+          </a>
+          <a href="/nuhveysel" target="_blank" className="px-8 py-3.5 bg-[#1A1A1A]/5 border border-black/10 text-[#1A1A1A] font-medium rounded-full hover:bg-[#1A1A1A]/10 transition-colors">
             Demoyu İncele
-          </button>
+          </a>
         </motion.div>
       </div>
 

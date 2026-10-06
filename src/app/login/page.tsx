@@ -70,7 +70,13 @@ export default function Login() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-sm font-medium text-[#1A1A1A]">Şifre</label>
-                  <a href="#" className="text-xs font-medium text-[#D32F2F] hover:underline">Şifremi Unuttum</a>
+                  <button 
+                    type="button" 
+                    onClick={() => alert("E-posta adresinize sıfırlama bağlantısı gönderildi.")} 
+                    className="text-xs font-medium text-[#D32F2F] hover:underline"
+                  >
+                    Şifremi Unuttum
+                  </button>
                 </div>
                 <input 
                   type="password" 

@@ -22,11 +22,11 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="/register" className="text-sm font-semibold tracking-tight text-[#1A1A1A] flex items-center gap-2">
+        <a href="/" className="text-sm font-semibold tracking-tight text-[#1A1A1A] flex items-center gap-2">
           <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center">
             <div className="w-2 h-2 rounded-full bg-[#1A1A1A]" />
           </div>
-          Kreo
+          Kreo.
         </a>
 
         <div className="hidden md:flex items-center gap-8">
@@ -46,10 +46,16 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden md:flex items-center gap-3">
+          <a
+            href="/login"
+            className="px-4 py-2 text-xs font-semibold text-[#1A1A1A] hover:bg-black/5 rounded-lg transition-colors"
+          >
+            Giriş Yap
+          </a>
           <a
             href="/register"
-            className="px-4 py-2 text-xs font-medium text-black bg-[#D32F2F] rounded-md hover:bg-[#C62828] shadow-md shadow-red-500/20 transition-colors"
+            className="px-4 py-2 text-xs font-semibold text-white bg-[#D32F2F] rounded-lg hover:bg-[#C62828] shadow-md shadow-red-500/20 transition-colors"
           >
             Kayıt Ol
           </a>
