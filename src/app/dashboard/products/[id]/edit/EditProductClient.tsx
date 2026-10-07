@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, Upload, FileText, CalendarDays, Lock, Info, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Upload, FileText, CalendarDays, Lock, Info, CheckCircle2, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { updateProductAction } from "@/app/actions/productActions";
