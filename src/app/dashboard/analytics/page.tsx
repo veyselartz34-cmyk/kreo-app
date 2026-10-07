@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Users, Globe2, Smartphone, MousePointerClick, Filter, ArrowRight, ArrowDownRight, Zap } from "lucide-react";
+import { Users, Smartphone, MousePointerClick, Filter, ArrowRight, ArrowDownRight, Zap } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 
 const trafficData = [
@@ -31,14 +31,6 @@ const funnelData = [
 const deviceData = [
   { name: 'Mobil', value: 82, color: '#1A1A1A' },
   { name: 'Masaüstü', value: 18, color: '#D32F2F' },
-];
-
-const cityData = [
-  { name: "İstanbul", count: 850, percent: "35%" },
-  { name: "Ankara", count: 420, percent: "18%" },
-  { name: "İzmir", count: 310, percent: "12%" },
-  { name: "Bursa", count: 150, percent: "6%" },
-  { name: "Antalya", count: 80, percent: "3%" },
 ];
 
 export default function AnalyticsPage() {
@@ -242,39 +234,6 @@ export default function AnalyticsPage() {
             </div>
           </motion.div>
         </div>
-
-        {/* 4. ŞEHİRLER (Tam Genişlik) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="bg-white p-10 sm:p-16 rounded-[3rem] border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.02)]"
-        >
-          <div className="flex items-center justify-between mb-16 border-b border-black/5 pb-10">
-            <div>
-              <h3 className="text-3xl font-black text-[#1A1A1A] tracking-tight">Bölgesel Erişim</h3>
-              <p className="text-lg font-medium text-zinc-500 mt-4">Vitrininizi en çok ziyaret eden şehirlerin dağılımı.</p>
-            </div>
-            <div className="w-16 h-16 bg-zinc-50 rounded-[1.5rem] flex items-center justify-center border border-black/5">
-              <Globe2 className="w-8 h-8 text-zinc-400" />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-            {cityData.map((city, idx) => (
-              <div key={idx} className="flex items-center justify-between p-6 rounded-2xl hover:bg-zinc-50 transition-colors border border-transparent hover:border-black/5">
-                <div className="flex items-center gap-6">
-                  <span className="text-2xl font-black text-zinc-300 w-8">{idx + 1}</span>
-                  <span className="text-xl font-black text-[#1A1A1A]">{city.name}</span>
-                </div>
-                <div className="flex items-center gap-8">
-                  <span className="text-base font-bold text-zinc-500">{city.count} Ziyaretçi</span>
-                  <span className="text-xl font-black text-[#1A1A1A] w-16 text-right bg-zinc-100 px-3 py-2 rounded-xl">{city.percent}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </div>
   );
