@@ -48,9 +48,9 @@ export async function registerAction(formData: {
 
     revalidatePath("/dashboard");
     return { success: true, username: newUser.username };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Register error:", error);
-    return { success: false, error: "Kayıt olunurken bir hata oluştu." };
+    return { success: false, error: error?.message || "Kayıt olunurken bir hata oluştu." };
   }
 }
 
@@ -84,9 +84,9 @@ export async function loginAction(formData: {
 
     revalidatePath("/dashboard");
     return { success: true, username: user.username };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Login error:", error);
-    return { success: false, error: "Giriş yapılırken bir hata oluştu." };
+    return { success: false, error: error?.message || "Giriş yapılırken bir hata oluştu." };
   }
 }
 
