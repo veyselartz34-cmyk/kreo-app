@@ -51,15 +51,21 @@ export default function NewProductPage() {
       formData.append("file", productFile);
     }
 
-    const res = await createProductAction(formData);
+    try {
+      const res = await createProductAction(formData);
 
-    if (res.success) {
-      setIsSaved(true);
-      setTimeout(() => {
-        router.push("/dashboard/products");
-      }, 1500);
-    } else {
-      alert(res.error);
+      if (res.success) {
+        setIsSaved(true);
+        setTimeout(() => {
+          router.push("/dashboard/products");
+        }, 1500);
+      } else {
+        alert(res.error);
+        setIsSubmitting(false);
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert("Sunucuya bağlanırken bir hata oluştu veya dosya çok büyük (Maks 50MB).");
       setIsSubmitting(false);
     }
   };
