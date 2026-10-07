@@ -107,7 +107,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               key={product.id} 
-              className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-5 sm:p-6 bg-white rounded-3xl border border-black/5 hover:border-black/10 transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-xl overflow-hidden"
+              className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-5 sm:p-6 bg-white rounded-3xl border border-black/5 hover:border-black/10 transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-xl"
             >
               <div className="flex items-center gap-5 relative z-10">
                 <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center flex-shrink-0 ${product.bg} border group-hover:scale-105 transition-transform duration-300`}>
