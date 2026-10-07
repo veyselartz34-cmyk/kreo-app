@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, MoreHorizontal, ExternalLink, FileText, CalendarDays, Lock, Eye, Package, Check, Edit2, Trash2 } from "lucide-react";
+import { Plus, Search, MoreHorizontal, ExternalLink, FileText, CalendarDays, Lock, Eye, Package, Check, Edit2, Trash2, ArrowRight } from "lucide-react";
 import { deleteProductAction } from "@/app/actions/productActions";
 
 type ProductItem = {
@@ -35,90 +35,61 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
 
   const mappedProducts = initialProducts.map(p => ({
     ...p,
-    icon: p.type === "Abonelik" ? Lock : p.type.includes("Görüşme") || p.type.includes("Danışmanlık") ? CalendarDays : FileText,
-    color: p.type === "Abonelik" ? "text-[#FBC02D]" : p.type.includes("Görüşme") ? "text-[#F57C00]" : "text-blue-500",
-    bg: p.type === "Abonelik" ? "bg-[#FBC02D]/10" : p.type.includes("Görüşme") ? "bg-[#F57C00]/10" : "bg-blue-50",
+    icon: p.icon === "Lock" ? Lock : p.icon === "FileText" ? FileText : CalendarDays,
+    bg: p.icon === "Lock" ? "bg-orange-500/10 border-orange-500/20" : p.icon === "FileText" ? "bg-blue-500/10 border-blue-500/20" : "bg-emerald-500/10 border-emerald-500/20",
+    color: p.icon === "Lock" ? "text-orange-400" : p.icon === "FileText" ? "text-blue-400" : "text-emerald-400",
+    glow: p.icon === "Lock" ? "from-orange-500/20 to-transparent" : p.icon === "FileText" ? "from-blue-500/20 to-transparent" : "from-emerald-500/20 to-transparent"
   }));
 
-  const filteredProducts = mappedProducts.filter(p => filter === "Tümü" || p.type === filter);
+  const filteredProducts = filter === "Tümü" ? mappedProducts : mappedProducts.filter(p => p.type === filter);
 
   const handleCopy = (id: string) => {
+    navigator.clipboard.writeText(`https://kreo.com/checkout/${id}`);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
 
   return (
-    <div className="max-w-6xl mx-auto pb-12">
+    <div className="max-w-7xl mx-auto text-zinc-100">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
         <div>
-          <h1 className="text-2xl font-bold text-[#1A1A1A]">Ürünler</h1>
-          <p className="text-zinc-500 text-sm mt-1">Dijital ürünlerini, danışmanlıklarını ve aboneliklerini yönet.</p>
+          <h1 className="text-3xl font-black text-white tracking-tight">Ürünler & İçerikler</h1>
+          <p className="text-zinc-400 text-sm mt-2 font-medium">Satışta olan dijital ürünlerini ve danışmanlıklarını yönet.</p>
         </div>
         <Link 
           href="/dashboard/products/new"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D32F2F] text-white text-sm font-semibold rounded-xl hover:bg-[#C62828] transition-colors shadow-lg shadow-red-500/20"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#D32F2F] to-[#C62828] text-white text-sm font-bold rounded-xl hover:from-[#C62828] hover:to-[#B71C1C] transition-all shadow-[0_0_20px_rgba(211,47,47,0.3)] hover:shadow-[0_0_30px_rgba(211,47,47,0.5)] transform hover:-translate-y-0.5"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-5 h-5" />
           Yeni Ürün Ekle
         </Link>
       </div>
 
       {/* Filters & Search */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        <div className="relative flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
           <input 
             type="text" 
             placeholder="Ürünlerde ara..." 
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-black/5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D32F2F]/20 focus:border-[#D32F2F] transition-all"
+            className="w-full pl-12 pr-4 py-3.5 bg-[#111] border border-white/10 rounded-2xl text-sm font-medium text-white focus:ring-2 focus:ring-[#D32F2F]/50 outline-none transition-all placeholder:text-zinc-600 shadow-inner"
           />
         </div>
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 hide-scrollbar">
-          {["Tümü", "Dijital Ürün", "Danışmanlık", "Abonelik"].map((tab) => (
+        <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 hide-scrollbar">
+          {["Tümü", "Dijital Ürün", "Birebir Görüşme", "Abonelik"].map(f => (
             <button 
-              key={tab}
-              onClick={() => setFilter(tab)}
-              className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
-                filter === tab 
-                  ? "bg-white border-black/10 text-[#1A1A1A] shadow-sm border" 
-                  : "bg-transparent border-transparent text-zinc-500 hover:bg-black/5 border"
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-5 py-3.5 rounded-2xl text-sm font-bold whitespace-nowrap transition-all border ${
+                filter === f 
+                  ? "bg-white/10 text-white border-white/20 shadow-lg" 
+                  : "bg-[#111] text-zinc-500 border-white/5 hover:bg-white/5 hover:text-zinc-300"
               }`}
             >
-              {tab}
+              {f}
             </button>
           ))}
-        </div>
-      </div>
-
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-4">
-          <div className="w-12 h-12 bg-zinc-50 rounded-full flex items-center justify-center">
-            <Package className="w-6 h-6 text-zinc-400" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-zinc-500">Toplam Ürün</p>
-            <p className="text-xl font-bold text-[#1A1A1A]">{initialProducts.length} Adet</p>
-          </div>
-        </div>
-        <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-4">
-          <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-            <svg className="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-zinc-500">Toplam Satış</p>
-            <p className="text-xl font-bold text-[#1A1A1A]">{initialProducts.length > 0 ? "142 İşlem" : "0 İşlem"}</p>
-          </div>
-        </div>
-        <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-4">
-          <div className="w-12 h-12 bg-[#D32F2F]/10 rounded-full flex items-center justify-center">
-            <svg className="w-6 h-6 text-[#D32F2F]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-zinc-500">Hacim</p>
-            <p className="text-xl font-bold text-[#1A1A1A]">{initialProducts.length > 0 ? "₺35,400" : "₺0"}</p>
-          </div>
         </div>
       </div>
 
@@ -137,56 +108,53 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               key={product.id} 
-              className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-5 sm:p-6 bg-white rounded-3xl border border-black/5 hover:border-black/10 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-xl transition-all duration-300"
+              className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-5 sm:p-6 bg-[#111] rounded-3xl border border-white/5 hover:border-white/10 transition-all duration-300 overflow-hidden"
             >
-              {/* Subtle left accent bar */}
-              <div className={`absolute left-0 top-0 bottom-0 w-1 ${product.bg} opacity-0 group-hover:opacity-100 transition-opacity rounded-l-3xl`} />
+              {/* Subtle ambient glow on hover */}
+              <div className={`absolute -right-20 -top-20 w-48 h-48 bg-gradient-to-br ${product.glow} opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 pointer-events-none`} />
               
-              <div className="flex items-center gap-5">
-                <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center flex-shrink-0 ${product.bg} border border-black/5 group-hover:scale-105 transition-transform duration-300`}>
+              <div className="flex items-center gap-5 relative z-10">
+                <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center flex-shrink-0 ${product.bg} border group-hover:scale-105 transition-transform duration-300`}>
                   <product.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${product.color}`} />
                 </div>
                 <div>
-                  <h3 className="text-base sm:text-lg font-bold text-[#1A1A1A] group-hover:text-[#D32F2F] transition-colors">{product.title}</h3>
+                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-[#D32F2F] transition-colors">{product.title}</h3>
                   <div className="flex items-center gap-3 mt-1.5">
-                    <span className="text-xs font-medium text-zinc-500 uppercase tracking-wider">{product.type}</span>
-                    <span className="w-1 h-1 rounded-full bg-zinc-300"></span>
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                    <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{product.type}</span>
+                    <span className="w-1 h-1 rounded-full bg-zinc-700"></span>
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-green-400 bg-green-500/10 border border-green-500/20 px-2.5 py-0.5 rounded-full shadow-sm">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.8)] animate-pulse"></span>
                       {product.status}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between sm:justify-end gap-6 mt-4 sm:mt-0 pl-19 sm:pl-0">
+              <div className="flex items-center justify-between sm:justify-end gap-8 mt-6 sm:mt-0 relative z-10 border-t sm:border-t-0 border-white/5 pt-4 sm:pt-0">
                 <div className="text-left sm:text-right">
-                  <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-0.5">Satış</p>
-                  <p className="text-base font-bold text-[#1A1A1A]">{product.sales}</p>
+                  <p className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-1">Satış</p>
+                  <p className="text-xl font-black text-white">{product.sales}</p>
                 </div>
                 <div className="text-left sm:text-right w-24">
-                  <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-0.5">Fiyat</p>
-                  <p className="text-base font-bold text-[#1A1A1A]">{product.price}</p>
+                  <p className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-1">Fiyat</p>
+                  <p className="text-xl font-black text-white">{product.price}</p>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-2 border-l border-black/5 pl-6 relative">
-                  <Link href="/nuhveysel" target="_blank" className="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-50 text-zinc-500 hover:text-[#D32F2F] hover:bg-[#D32F2F]/10 transition-colors" title="Vitrinde Gör">
-                    <Eye className="w-4 h-4" />
-                  </Link>
+                <div className="flex items-center gap-2 border-l border-white/10 pl-8 ml-2">
                   <button 
                     onClick={() => handleCopy(product.id)}
-                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-50 text-zinc-500 hover:text-green-600 hover:bg-green-50 transition-colors" 
+                    className="w-11 h-11 flex items-center justify-center rounded-xl bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 border border-transparent hover:border-white/10 transition-all shadow-sm" 
                     title="Linki Kopyala"
                   >
-                    {copiedId === product.id ? <Check className="w-4 h-4 text-green-600" /> : <ExternalLink className="w-4 h-4" />}
+                    {copiedId === product.id ? <Check className="w-5 h-5 text-green-500" /> : <ExternalLink className="w-5 h-5" />}
                   </button>
                   <button 
                     onClick={() => setMenuOpenId(menuOpenId === product.id ? null : product.id)}
                     onBlur={() => setTimeout(() => setMenuOpenId(null), 200)}
-                    className={`w-10 h-10 flex items-center justify-center rounded-xl transition-colors ${menuOpenId === product.id ? 'bg-black/5 text-[#1A1A1A]' : 'bg-zinc-50 text-zinc-500 hover:text-[#1A1A1A] hover:bg-black/5'}`}
+                    className={`w-11 h-11 flex items-center justify-center rounded-xl transition-all border ${menuOpenId === product.id ? 'bg-white/10 text-white border-white/20' : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 border-transparent hover:border-white/10'} shadow-sm`}
                   >
-                    <MoreHorizontal className="w-4 h-4" />
+                    <MoreHorizontal className="w-5 h-5" />
                   </button>
 
                   {/* Dropdown Menu */}
@@ -196,15 +164,19 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                         initial={{ opacity: 0, scale: 0.95, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                        className="absolute right-0 top-12 w-40 bg-white border border-black/5 shadow-xl rounded-xl py-2 z-10"
+                        className="absolute right-0 top-14 w-48 bg-[#18181B] border border-white/10 shadow-2xl rounded-2xl py-2 z-50 overflow-hidden"
                       >
-                        <button className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 hover:text-[#1A1A1A]">
+                        <Link 
+                          href={`/dashboard/products/${product.id}/edit`} 
+                          className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-zinc-300 hover:bg-white/5 hover:text-white transition-colors"
+                        >
                           <Edit2 className="w-4 h-4" /> Düzenle
-                        </button>
+                        </Link>
+                        <div className="h-px w-full bg-white/5 my-1"></div>
                         <button 
                           onClick={() => handleDelete(product.id)}
                           disabled={isDeleting === product.id}
-                          className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+                          className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors disabled:opacity-50"
                         >
                           <Trash2 className="w-4 h-4" /> {isDeleting === product.id ? "Siliniyor..." : "Sil"}
                         </button>
@@ -218,18 +190,21 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
         </AnimatePresence>
         
         {filteredProducts.length === 0 && (
-          <div className="bg-white rounded-3xl border border-black/5 p-12 text-center shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-            <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center mx-auto mb-5">
-              <Package className="w-10 h-10 text-zinc-400" />
+          <div className="bg-[#111] rounded-[3rem] border border-white/5 p-16 text-center shadow-lg relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+            <div className="relative z-10">
+              <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 shadow-inner">
+                <Package className="w-10 h-10 text-zinc-500" />
+              </div>
+              <h3 className="text-2xl font-black text-white mb-3">Bu kategoride ürün yok</h3>
+              <p className="text-zinc-500 mb-8 max-w-sm mx-auto font-medium leading-relaxed">Seçtiğiniz filtreye uygun bir ürün bulunamadı. Yeni bir tane ekleyerek kazanmaya başlayın.</p>
+              <button 
+                onClick={() => setFilter("Tümü")}
+                className="inline-flex items-center justify-center px-8 py-4 bg-white/10 text-white text-sm font-bold rounded-2xl border border-white/10 hover:bg-white/20 transition-all shadow-md"
+              >
+                Filtreyi Temizle
+              </button>
             </div>
-            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Bu kategoride ürün yok</h3>
-            <p className="text-sm text-zinc-500 mb-8 max-w-sm mx-auto">Seçtiğiniz filtreye uygun bir ürün bulunamadı. Yeni bir tane ekleyebilirsiniz.</p>
-            <button 
-              onClick={() => setFilter("Tümü")}
-              className="inline-flex items-center justify-center px-6 py-3 bg-zinc-100 text-[#1A1A1A] text-sm font-bold rounded-xl hover:bg-zinc-200 transition-colors"
-            >
-              Filtreyi Temizle
-            </button>
           </div>
         )}
       </motion.div>
