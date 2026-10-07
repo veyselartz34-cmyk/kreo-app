@@ -17,7 +17,6 @@ type UserProp = {
 
 export default function DashboardLayoutClient({ children, user }: { children: React.ReactNode; user: UserProp }) {
   const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -38,60 +37,51 @@ export default function DashboardLayoutClient({ children, user }: { children: Re
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-zinc-100 flex font-sans selection:bg-[#D32F2F] selection:text-white">
+    <div className="min-h-screen bg-[#FDFBF7] text-[#1A1A1A] flex font-sans selection:bg-[#FBC02D] selection:text-[#1A1A1A]">
       {/* Sidebar (Desktop) */}
-      <aside className="hidden md:flex flex-col w-64 border-r border-white/10 bg-[#0A0A0A] fixed inset-y-0 z-30">
-        <div className="h-20 flex items-center px-8 border-b border-white/5">
-          <Link href="/" className="text-2xl font-black tracking-tighter text-white flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#D32F2F] to-[#F57C00] rounded-lg flex items-center justify-center shadow-lg shadow-red-500/20">
-              <span className="text-white text-lg leading-none mt-[-2px]">K</span>
-            </div>
+      <aside className="hidden md:flex flex-col w-64 border-r border-black/5 bg-[#FDFBF7] fixed inset-y-0 z-30">
+        <div className="h-20 flex items-center px-8 border-b border-black/5">
+          <Link href="/" className="text-2xl font-black tracking-tighter text-[#1A1A1A] flex items-center gap-2">
             Kreo<span className="text-[#D32F2F]">.</span>
           </Link>
         </div>
         
-        <div className="p-4">
-          <p className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-4 px-4">Yönetim Paneli</p>
-          <nav className="space-y-1.5">
+        <div className="p-4 mt-2">
+          <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 px-4">Yönetim Paneli</p>
+          <nav className="space-y-2">
             {navItems.map((item) => {
               const active = isActive(item.href, item.exact);
               return (
                 <Link 
                   key={item.href}
                   href={item.href} 
-                  className={`group flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden ${
+                  className={`group flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-bold transition-all duration-300 relative overflow-hidden ${
                     active 
-                      ? "text-white bg-white/10 shadow-sm" 
-                      : "text-zinc-400 hover:text-white hover:bg-white/5"
+                      ? "text-[#D32F2F] bg-white shadow-md border border-black/5" 
+                      : "text-zinc-500 hover:text-[#1A1A1A] hover:bg-black/5 border border-transparent"
                   }`}
                 >
-                  {active && (
-                    <motion.div 
-                      layoutId="sidebar-active"
-                      className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#D32F2F] to-[#F57C00] rounded-r-full"
-                    />
-                  )}
                   <div className="flex items-center gap-3 relative z-10">
-                    <item.icon className={`w-5 h-5 transition-colors ${active ? "text-[#FBC02D]" : "text-zinc-500 group-hover:text-zinc-300"}`} />
+                    <item.icon className={`w-5 h-5 transition-colors ${active ? "text-[#D32F2F]" : "text-zinc-400 group-hover:text-[#1A1A1A]"}`} />
                     {item.label}
                   </div>
-                  {active && <ChevronRight className="w-4 h-4 text-zinc-500" />}
+                  {active && <ChevronRight className="w-4 h-4 text-[#D32F2F]" />}
                 </Link>
               )
             })}
           </nav>
         </div>
 
-        <div className="mt-auto p-4 border-t border-white/5">
+        <div className="mt-auto p-4 border-t border-black/5">
           <Link 
             href="/dashboard/settings" 
-            className={`group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+            className={`group flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all duration-300 ${
               isActive("/dashboard/settings") 
-                ? "text-white bg-white/10 shadow-sm" 
-                : "text-zinc-400 hover:text-white hover:bg-white/5"
+                ? "text-[#D32F2F] bg-white shadow-md border border-black/5" 
+                : "text-zinc-500 hover:text-[#1A1A1A] hover:bg-black/5 border border-transparent"
             }`}
           >
-            <Settings className={`w-5 h-5 transition-colors ${isActive("/dashboard/settings") ? "text-[#FBC02D]" : "text-zinc-500 group-hover:text-zinc-300"}`} />
+            <Settings className={`w-5 h-5 transition-colors ${isActive("/dashboard/settings") ? "text-[#D32F2F]" : "text-zinc-400 group-hover:text-[#1A1A1A]"}`} />
             Ayarlar
           </Link>
         </div>
@@ -100,17 +90,17 @@ export default function DashboardLayoutClient({ children, user }: { children: Re
       {/* Main Content */}
       <div className="flex-1 md:ml-64 flex flex-col min-h-screen relative">
         {/* Top Header - Glassmorphism */}
-        <header className="h-20 border-b border-white/5 bg-[#0A0A0A]/80 backdrop-blur-xl flex items-center justify-between px-6 md:px-10 sticky top-0 z-20">
+        <header className="h-20 border-b border-black/5 bg-[#FDFBF7]/80 backdrop-blur-xl flex items-center justify-between px-6 md:px-10 sticky top-0 z-20">
           <div className="flex items-center gap-4 md:hidden">
-            <button className="text-zinc-400 hover:text-white transition-colors">
+            <button className="text-[#1A1A1A] hover:text-[#D32F2F] transition-colors">
               <Menu className="w-6 h-6" />
             </button>
-            <span className="font-bold text-white text-xl">Kreo.</span>
+            <span className="font-bold text-[#1A1A1A] text-xl">Kreo.</span>
           </div>
           
           <div className="hidden md:flex items-center">
-            <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 flex items-center gap-2 text-xs font-medium text-zinc-300 shadow-inner">
-              <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse"></div>
+            <div className="px-4 py-2 rounded-full bg-white border border-black/5 flex items-center gap-2 text-xs font-bold text-[#1A1A1A] shadow-sm">
+              <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)] animate-pulse"></div>
               Kreo Pro Aktif
             </div>
           </div>
@@ -119,15 +109,15 @@ export default function DashboardLayoutClient({ children, user }: { children: Re
             <Link 
               href={`/${user.username}`} 
               target="_blank"
-              className="hidden sm:flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white transition-colors group"
+              className="hidden sm:flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-[#D32F2F] transition-colors group"
             >
               Vitrinimi Gör <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </Link>
             
-            <div className="w-px h-6 bg-white/10 hidden sm:block"></div>
+            <div className="w-px h-6 bg-black/10 hidden sm:block"></div>
             
             {/* Notifications */}
-            <button className="relative text-zinc-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/5">
+            <button className="relative text-zinc-500 hover:text-[#1A1A1A] transition-colors p-2 rounded-full hover:bg-black/5">
               <Bell className="w-5 h-5" />
             </button>
 
@@ -135,12 +125,12 @@ export default function DashboardLayoutClient({ children, user }: { children: Re
             <div className="relative">
               <button 
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-3 p-1 pr-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors focus:outline-none"
+                className="flex items-center gap-3 p-1 pr-4 rounded-full bg-white border border-black/5 hover:bg-zinc-50 transition-colors shadow-sm focus:outline-none"
               >
-                <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20">
+                <div className="w-8 h-8 rounded-full overflow-hidden border border-black/5">
                   <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
                 </div>
-                <span className="text-sm font-bold text-zinc-200 hidden sm:block">{user.name.split(" ")[0]}</span>
+                <span className="text-sm font-bold text-[#1A1A1A] hidden sm:block">{user.name.split(" ")[0]}</span>
               </button>
               
               <AnimatePresence>
@@ -150,19 +140,19 @@ export default function DashboardLayoutClient({ children, user }: { children: Re
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-3 w-56 bg-[#111] border border-white/10 shadow-2xl rounded-2xl overflow-hidden z-50"
+                    className="absolute right-0 top-full mt-3 w-56 bg-white border border-black/5 shadow-2xl rounded-2xl overflow-hidden z-50"
                   >
-                    <div className="p-4 border-b border-white/5 bg-white/5">
-                      <p className="text-sm font-bold text-white truncate">{user.name}</p>
-                      <p className="text-xs text-zinc-400 truncate">{user.email}</p>
+                    <div className="p-4 border-b border-black/5 bg-zinc-50/50">
+                      <p className="text-sm font-bold text-[#1A1A1A] truncate">{user.name}</p>
+                      <p className="text-xs font-medium text-zinc-500 truncate">{user.email}</p>
                     </div>
                     <div className="p-2">
-                      <Link href="/dashboard/settings" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                      <Link href="/dashboard/settings" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-zinc-600 hover:text-[#1A1A1A] hover:bg-black/5 rounded-xl transition-colors">
                         <Settings className="w-4 h-4" /> Hesap Ayarları
                       </Link>
                       <button 
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors mt-1"
+                        className="w-full flex items-center gap-2 px-3 py-2 text-sm font-bold text-[#D32F2F] hover:bg-[#D32F2F]/10 rounded-xl transition-colors mt-1"
                       >
                         <LogOut className="w-4 h-4" /> Çıkış Yap
                       </button>
@@ -171,7 +161,6 @@ export default function DashboardLayoutClient({ children, user }: { children: Re
                 )}
               </AnimatePresence>
             </div>
-
           </div>
         </header>
 
