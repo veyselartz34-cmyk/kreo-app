@@ -12,6 +12,7 @@ type ProductData = {
   price: number;
   type: string;
   icon?: string | null;
+  fileUrl?: string | null;
   creatorName: string;
   creatorUsername: string;
 };
@@ -58,11 +59,18 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
             <CheckCircle2 className="w-10 h-10 text-green-500" />
           </div>
           <h2 className="text-2xl font-bold text-[#1A1A1A] mb-2">Odeme Basarili!</h2>
-          <p className="text-zinc-500 mb-8">Siparis detaylariniz ve urun erisim linkiniz e-posta adresinize gonderildi.</p>
+          <p className="text-zinc-500 mb-8">Siparis detaylariniz e-posta adresinize gonderildi.</p>
           <div className="p-4 bg-zinc-50 rounded-2xl mb-8 text-left">
             <p className="text-sm font-bold text-[#1A1A1A] mb-1">{product.title}</p>
             <p className="text-xs text-zinc-500">Tutar: ₺{product.price.toFixed(2)}</p>
           </div>
+
+          {product.fileUrl ? (
+            <a href={product.fileUrl} download target="_blank" className="block w-full py-3.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors mb-4">
+              Dosyayi Indir
+            </a>
+          ) : null}
+
           <Link href={`/${product.creatorUsername}`} className="block w-full py-3.5 bg-[#1A1A1A] text-white text-sm font-bold rounded-xl hover:bg-black transition-colors">
             Vitrine Don
           </Link>

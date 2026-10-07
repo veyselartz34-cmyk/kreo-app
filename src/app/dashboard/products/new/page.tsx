@@ -18,6 +18,8 @@ export default function NewProductPage() {
   const [isSaved, setIsSaved] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [productFile, setProductFile] = useState<File | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,13 +39,19 @@ export default function NewProductPage() {
 
     const typeLabel = productType === "digital" ? "Dijital Urun" : productType === "calendar" ? "Birebir Gorusme" : "Abonelik";
 
-    const res = await createProductAction({
-      title,
-      description: desc,
-      price: parseFloat(price),
-      type: typeLabel,
-      icon: icon
-    });
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", desc);
+    formData.append("price", price);
+    formData.append("type", typeLabel);
+    if (icon) formData.append("icon", icon);
+    
+    // Asil dijital dosyayi ekle
+    if (productFile && productType === "digital") {
+      formData.append("file", productFile);
+    }
+
+    const res = await createProductAction(formData);
 
     if (res.success) {
       setIsSaved(true);
@@ -187,11 +195,19 @@ export default function NewProductPage() {
             </div>
 
             {productType === "digital" && (
-              <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl flex items-start gap-3">
-                <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-blue-800">
-                  Musterinin satin aldiktan sonra indirecegi <b>PDF, ZIP veya Video</b> dosyasini urunu kaydettikten sonraki ekranda yukleyeceksiniz.
-                </p>
+              <div className="mt-6 border-t border-black/5 pt-6">
+                <h4 className="text-sm font-bold text-[#1A1A1A] mb-3">Teslim Edilecek Dosya (Vercel Blob)</h4>
+                <input 
+                  type="file" 
+                  onChange={(e) => setProductFile(e.target.files?.[0] || null)}
+                  className="block w-full text-sm text-zinc-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-[#D32F2F]/10 file:text-[#D32F2F]
+                    hover:file:bg-[#D32F2F]/20 transition-colors"
+                />
+                {productFile && <p className="text-xs text-zinc-500 mt-2">Secilen dosya: {productFile.name} ({(productFile.size / 1024 / 1024).toFixed(2)} MB)</p>}
               </div>
             )}
           </motion.div>

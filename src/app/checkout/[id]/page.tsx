@@ -19,6 +19,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
     price: product.price,
     type: product.type,
     icon: product.icon,
+    fileUrl: product.fileUrl,
     creatorName: product.user.name,
     creatorUsername: product.user.username,
   };
