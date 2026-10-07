@@ -33,6 +33,7 @@ model User {
   products           Product[]
   meetings           Meeting[]
   customers          Customer[] // Bu ureticinin musterileri
+  discountCodes      DiscountCode[]
 }
 
 model Product {
@@ -109,4 +110,22 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model DiscountCode {
+  id          String   @id @default(cuid())
+  code        String   
+  discount    Float    
+  isPercent   Boolean  @default(true)
+  usageLimit  Int?     
+  usedCount   Int      @default(0)
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([code, userId])
 }
