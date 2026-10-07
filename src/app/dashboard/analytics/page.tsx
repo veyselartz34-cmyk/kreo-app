@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BarChart3, TrendingUp, Users, Globe2, Smartphone, MousePointerClick, Filter } from "lucide-react";
+import { BarChart3, TrendingUp, Users, Globe2, Smartphone, MousePointerClick, Filter, ArrowRight, ArrowDownRight } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 
 const trafficData = [
