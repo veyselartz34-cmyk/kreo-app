@@ -18,22 +18,27 @@ type ProductProp = {
   title: string;
   price: string;
   type: string;
+  iconStr?: string | null;
 };
 
 export default function CreatorStorefront({ 
   initialProducts,
   creatorName = "Nuh Veysel",
   username = "nuhveysel",
-  bio = "Dijital ürün tasarımcısı ve geliştirici. UI/UX ipuçları ve premium şablonlar paylaşıyorum."
+  bio = "Dijital Urun tasarimcisi ve gelistirici.",
+  avatar,
+  cover
 }: { 
   initialProducts: ProductProp[];
   creatorName?: string;
   username?: string;
   bio?: string;
+  avatar?: string | null;
+  cover?: string | null;
 }) {
   const products = initialProducts.map(p => ({
     ...p,
-    icon: p.type === "Abonelik" ? <Lock className="w-5 h-5 text-zinc-500" /> : <ExternalLink className="w-5 h-5 text-zinc-500" />
+    icon: p.iconStr ? <img src={p.iconStr} alt={p.title} className="w-full h-full object-cover rounded-xl" /> : (p.type === "Abonelik" ? <Lock className="w-5 h-5 text-zinc-500" /> : <ExternalLink className="w-5 h-5 text-zinc-500" />)
   }));
   return (
     <main className="min-h-screen bg-[var(--bg)] pb-24">
@@ -41,7 +46,7 @@ export default function CreatorStorefront({
       <div className="relative h-48 md:h-64 w-full overflow-hidden">
         <div className="absolute inset-0 bg-black/20 z-10" />
         <img 
-          src={DUMMY_USER.cover} 
+          src={cover || DUMMY_USER.cover} 
           alt="Cover" 
           className="w-full h-full object-cover object-center"
         />
@@ -57,7 +62,7 @@ export default function CreatorStorefront({
           className="flex flex-col items-center text-center"
         >
           <div className="w-32 h-32 rounded-full border-4 border-[var(--bg)] shadow-xl overflow-hidden bg-white mb-4">
-            <img src={DUMMY_USER.avatar} alt="Avatar" className="w-full h-full object-cover" />
+            <img src={avatar || DUMMY_USER.avatar} alt="Avatar" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-3xl font-bold text-[#1A1A1A] tracking-tight mb-1">{creatorName}</h1>
           <p className="text-sm font-medium text-zinc-500 mb-4">kreo.com/{username}</p>
@@ -130,7 +135,7 @@ export default function CreatorStorefront({
                 className="group flex items-center justify-between p-4 bg-white border border-black/5 rounded-2xl shadow-sm hover:shadow-md hover:border-black/10 transition-all duration-300"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-zinc-50 rounded-xl flex items-center justify-center border border-black/5 group-hover:scale-105 transition-transform">
+                  <div className={`w-12 h-12 bg-zinc-50 rounded-xl flex items-center justify-center border border-black/5 group-hover:scale-105 transition-transform ${product.iconStr ? 'p-0' : 'p-3'}`}>
                     {product.icon}
                   </div>
                   <div>

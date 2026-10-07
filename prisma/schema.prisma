@@ -8,16 +8,18 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  username  String   @unique
-  email     String   @unique
-  password  String
-  avatar    String?
-  bio       String?
-  cover     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  name               String
+  username           String   @unique
+  email              String   @unique
+  password           String
+  avatar             String?
+  bio                String?
+  cover              String?
+  isSubscribed       Boolean  @default(false)
+  emailNotifications Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   products  Product[]
   meetings  Meeting[]
@@ -28,7 +30,7 @@ model Product {
   title       String
   description String
   price       Float
-  type        String   // "Dijital Ürün" veya "Abonelik"
+  type        String   
   icon        String?
   color       String?
   createdAt   DateTime @default(now())
@@ -39,17 +41,18 @@ model Product {
 }
 
 model Meeting {
-  id        String   @id @default(cuid())
-  title     String
-  clientName String
+  id          String   @id @default(cuid())
+  title       String
+  clientName  String
   clientEmail String
-  date      String
-  time      String
-  link      String?
-  status    String   // "Başarılı", "Onaylandı", "İptal"
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  date        String
+  time        String
+  link        String?
+  status      String   
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+

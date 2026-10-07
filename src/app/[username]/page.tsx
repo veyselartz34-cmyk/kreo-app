@@ -29,8 +29,9 @@ export default async function StorefrontPage({ params }: { params: Promise<{ use
           id: p.id,
           title: p.title,
           price: `₺${p.price}`,
-          type: p.type
-        }))} creatorName={defaultUser.name} username={defaultUser.username} bio={defaultUser.bio || ""} />;
+          type: p.type,
+          iconStr: p.icon
+        }))} creatorName={defaultUser.name} username={defaultUser.username} bio={defaultUser.bio || ""} avatar={defaultUser.avatar} cover={defaultUser.cover} />;
       }
     }
     return notFound();
@@ -41,6 +42,7 @@ export default async function StorefrontPage({ params }: { params: Promise<{ use
     title: p.title,
     price: `₺${p.price}`,
     type: p.type,
+    iconStr: p.icon
   }));
 
   return (
@@ -49,6 +51,8 @@ export default async function StorefrontPage({ params }: { params: Promise<{ use
       creatorName={creator.name}
       username={creator.username}
       bio={creator.bio || ""}
+      avatar={creator.avatar}
+      cover={creator.cover}
     />
   );
 }

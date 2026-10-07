@@ -12,6 +12,11 @@ export async function registerAction(formData: {
   password: string;
 }) {
   try {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      return { success: false, error: "Gecerli bir e-posta adresi giriniz." };
+    }
+
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [

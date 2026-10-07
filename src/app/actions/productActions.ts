@@ -9,12 +9,13 @@ export async function createProductAction(formData: {
   description: string;
   price: number;
   type: string;
+  icon?: string;
 }) {
   try {
     const user = await getCurrentUser();
 
     if (!user) {
-      return { success: false, error: "Lütfen önce giriş yapın." };
+      return { success: false, error: "Lutfen once giris yapin." };
     }
 
     const newProduct = await prisma.product.create({
@@ -22,7 +23,8 @@ export async function createProductAction(formData: {
         title: formData.title,
         description: formData.description || "",
         price: formData.price,
-        type: formData.type || "Dijital Ürün",
+        type: formData.type || "Dijital Urun",
+        icon: formData.icon,
         userId: user.id,
       },
     });
@@ -33,6 +35,6 @@ export async function createProductAction(formData: {
     return { success: true, product: newProduct };
   } catch (error) {
     console.error("Error creating product:", error);
-    return { success: false, error: "Ürün eklenirken bir hata oluştu." };
+    return { success: false, error: "Urun eklenirken bir hata olustu." };
   }
 }
