@@ -117,9 +117,15 @@ export default function CreatorStorefront({
             <div className="group relative bg-white border border-black/5 rounded-[2.5rem] p-1 overflow-hidden shadow-xl shadow-black/5 hover:shadow-2xl transition-all duration-500">
               <div className="absolute inset-0 bg-gradient-to-br from-[#D32F2F]/10 via-transparent to-[#FBC02D]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="relative bg-white border border-black/5 rounded-[2.25rem] p-8 md:p-12 flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12">
-                <div className="w-24 h-24 md:w-32 md:h-32 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0 relative">
-                  <div className="absolute inset-0 border-2 border-orange-200/50 rounded-full animate-ping opacity-20" />
-                  <Calendar className="w-10 h-10 md:w-14 md:h-14 text-orange-500" />
+                <div className="w-24 h-24 md:w-32 md:h-32 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0 relative overflow-hidden border border-black/5">
+                  {consultingProduct.iconStr ? (
+                    <img src={consultingProduct.iconStr} alt={consultingProduct.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  ) : (
+                    <>
+                      <div className="absolute inset-0 border-2 border-orange-200/50 rounded-full animate-ping opacity-20" />
+                      <Calendar className="w-10 h-10 md:w-14 md:h-14 text-orange-500 relative z-10" />
+                    </>
+                  )}
                 </div>
                 <div className="flex-1 text-center md:text-left flex flex-col h-full justify-center">
                   <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-orange-100/50 text-orange-700 text-xs font-bold mb-4 uppercase tracking-wider mx-auto md:mx-0">
