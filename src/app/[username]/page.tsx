@@ -28,6 +28,7 @@ export default async function StorefrontPage({ params }: { params: Promise<{ use
         return <StorefrontClient initialProducts={defaultUser.products.map(p => ({
           id: p.id,
           title: p.title,
+          description: p.description,
           price: `₺${p.price}`,
           type: p.type,
           iconStr: p.icon
@@ -40,6 +41,7 @@ export default async function StorefrontPage({ params }: { params: Promise<{ use
   const formattedProducts = creator.products.map(p => ({
     id: p.id,
     title: p.title,
+    description: p.description,
     price: `₺${p.price}`,
     type: p.type,
     iconStr: p.icon
