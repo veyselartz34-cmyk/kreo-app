@@ -34,7 +34,8 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
       clientName: clientName,
       productTitle: product.title,
       amount: product.price,
-      creatorUsername: product.creatorUsername
+      creatorUsername: product.creatorUsername,
+      productId: product.id
     });
 
     setIsProcessing(false);

@@ -9,9 +9,10 @@ export async function processCheckoutAction(formData: {
   productTitle: string;
   amount: number;
   creatorUsername: string;
+  productId: string;
 }) {
   try {
-    let user = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { username: formData.creatorUsername }
     });
     
@@ -19,30 +20,42 @@ export async function processCheckoutAction(formData: {
       return { success: false, error: "Satici bulunamadi." };
     }
 
-    const today = new Date();
-    const dateFormatted = `Bugün, ${today.getHours().toString().padStart(2, '0')}:${today.getMinutes().toString().padStart(2, '0')}`;
-
-    // Create a record in the Meeting/Order table
-    const newMeeting = await prisma.meeting.create({
-      data: {
-        title: formData.productTitle,
-        clientName: formData.clientName,
-        clientEmail: formData.clientEmail,
-        date: dateFormatted,
-        time: `${today.getHours()}:00 - ${today.getHours() + 1}:00`,
-        status: "Başarılı",
-        userId: user.id,
+    // 1. Musteriyi bul veya olustur
+    const customer = await prisma.customer.upsert({
+      where: {
+        email_creatorId: {
+          email: formData.clientEmail,
+          creatorId: user.id
+        }
       },
+      update: {
+        name: formData.clientName, // ismi guncelle
+      },
+      create: {
+        name: formData.clientName,
+        email: formData.clientEmail,
+        creatorId: user.id
+      }
     });
 
-    // Revalidate dashboard routes so the new customer/meeting shows up immediately
+    // 2. Siparis (Order) olustur
+    const newOrder = await prisma.order.create({
+      data: {
+        amount: formData.amount,
+        status: "SUCCESS", // Mock Iyzico payment basarili varsayiyoruz
+        productId: formData.productId,
+        customerId: customer.id,
+      }
+    });
+
+    // Revalidate dashboard routes
     revalidatePath("/dashboard/customers");
-    revalidatePath("/dashboard/calendar");
+    revalidatePath("/dashboard/products");
     revalidatePath("/dashboard");
 
-    return { success: true, meeting: newMeeting };
+    return { success: true, order: newOrder };
   } catch (error) {
     console.error("Error processing checkout:", error);
-    return { success: false, error: "Ödeme işlenirken bir hata oluştu." };
+    return { success: false, error: "Odeme islenirken bir hata olustu." };
   }
 }
