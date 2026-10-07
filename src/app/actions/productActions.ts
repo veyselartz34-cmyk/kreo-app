@@ -91,3 +91,66 @@ export async function deleteProductAction(productId: string) {
     return { success: false, error: "Urun silinirken bir hata olustu." };
   }
 }
+
+export async function updateProductAction(productId: string, formData: FormData) {
+  try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return { success: false, error: "Lutfen once giris yapin." };
+    }
+
+    // Verify ownership
+    const existing = await prisma.product.findUnique({
+      where: { id: productId }
+    });
+
+    if (!existing || existing.userId !== user.id) {
+      return { success: false, error: "Urun bulunamadi veya yetkiniz yok." };
+    }
+
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const price = parseFloat(formData.get("price") as string);
+    const type = formData.get("type") as string;
+    const icon = formData.get("icon") as string;
+    
+    // File logic could be added here if needed, but for now we skip file re-upload
+    // to keep the update process simple. Or handle file replacement if a new file is uploaded.
+    const file = formData.get("file") as File | null;
+    let fileUrl = existing.fileUrl;
+    let fileSize = existing.fileSize;
+
+    if (file && file.size > 0) {
+      try {
+        const blob = await put(file.name, file, { access: 'public' });
+        fileUrl = blob.url;
+        fileSize = (file.size / (1024 * 1024)).toFixed(2) + " MB";
+      } catch (uploadError) {
+        console.error("Blob upload hatasi:", uploadError);
+        return { success: false, error: "Yeni dosya yuklenemedi." };
+      }
+    }
+
+    const updatedProduct = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        title,
+        description: description || "",
+        price,
+        type: type || existing.type,
+        ...(icon && { icon }), // update icon only if new one is provided
+        fileUrl,
+        fileSize,
+      },
+    });
+
+    revalidatePath("/dashboard/products");
+    revalidatePath(`/${user.username}`);
+
+    return { success: true, product: updatedProduct };
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return { success: false, error: "Urun guncellenirken bir hata olustu." };
+  }
+}
