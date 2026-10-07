@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, Package, CalendarDays, Users, Settings, Bell, ExternalLink, 
   Menu, LogOut, ChevronRight, BarChart3, Tag, Mail, CreditCard, Paintbrush, 
-  Share2, Zap, MessageSquare 
+  Share2, Zap, MessageSquare, Search
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
