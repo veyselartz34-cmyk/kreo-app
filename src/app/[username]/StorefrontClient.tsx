@@ -130,7 +130,7 @@ export default function CreatorStorefront({
           {products.length > 0 ? (
             products.map((product) => (
               <Link 
-                href="/checkout"
+                href={`/checkout/${product.id}`}
                 key={product.id}
                 className="group flex items-center justify-between p-4 bg-white border border-black/5 rounded-2xl shadow-sm hover:shadow-md hover:border-black/10 transition-all duration-300"
               >

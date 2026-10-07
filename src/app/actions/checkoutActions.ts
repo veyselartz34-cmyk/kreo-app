@@ -8,18 +8,15 @@ export async function processCheckoutAction(formData: {
   clientEmail: string;
   productTitle: string;
   amount: number;
+  creatorUsername: string;
 }) {
   try {
-    let user = await prisma.user.findFirst();
+    let user = await prisma.user.findUnique({
+      where: { username: formData.creatorUsername }
+    });
+    
     if (!user) {
-      user = await prisma.user.create({
-        data: {
-          name: "Nuh Veysel",
-          username: "nuhveysel",
-          email: "nuhveysel@kreo.com",
-          password: "default_password",
-        },
-      });
+      return { success: false, error: "Satici bulunamadi." };
     }
 
     const today = new Date();
