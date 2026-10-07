@@ -4,6 +4,11 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { v4 as uuidv4 } from "uuid";
+import { Resend } from "resend";
+
+// Resend istemcisi (Eger .env'de RESEND_API_KEY yoksa null veya fake obje gibi calisacak)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export async function registerAction(formData: {
   name: string;
@@ -27,7 +32,7 @@ export async function registerAction(formData: {
     });
 
     if (existingUser) {
-      return { success: false, error: "Bu e-posta veya kullanıcı adı zaten kullanımda." };
+      return { success: false, error: "Bu e-posta veya kullanici adi zaten kullanimda." };
     }
 
     const hashedPassword = await bcrypt.hash(formData.password, 10);
@@ -38,24 +43,47 @@ export async function registerAction(formData: {
         username: formData.username.toLowerCase().replace(/[^a-z0-9_]/g, ""),
         email: formData.email,
         password: hashedPassword,
-        bio: "Yeni Kreo üreticisi!",
+        bio: "Yeni Kreo Ureticisi!",
       }
     });
 
-    // Set HTTP-only session cookie
-    const cookieStore = await cookies();
-    cookieStore.set("kreo_session", newUser.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: "/",
+    // 1. E-Posta dogrulama token'i olustur
+    const token = uuidv4();
+    await prisma.verificationToken.create({
+      data: {
+        identifier: newUser.email,
+        token: token,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 saat gecerli
+      }
     });
 
-    revalidatePath("/dashboard");
-    return { success: true, username: newUser.username };
+    // 2. Dogrulama linki olustur
+    // Gercek ortamda BASE_URL (ornegin https://kreo.com) olmali, simdilik VERCEL_URL veya localhost aliyoruz
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const verificationLink = `${baseUrl}/verify?token=${token}`;
+
+    // 3. E-Posta gonder (Eger API Key varsa)
+    if (resend) {
+      await resend.emails.send({
+        from: "Kreo <noreply@kreo.com>", // Gercek domaininiz olmali (orn: noreply@kreo.com)
+        to: newUser.email,
+        subject: "Kreo - E-Posta Adresinizi Dogrulayin",
+        html: `<p>Merhaba ${newUser.name},</p><p>Kreo'ya hos geldiniz! Lutfen e-posta adresinizi dogrulamak icin asagidaki linke tiklayin:</p><a href="${verificationLink}">E-postami Dogrula</a>`
+      });
+    } else {
+      // Test asamasinda (API Key yokken) linki konsola basalim ki tiklayip test edebilelim
+      console.log("------------------------------------------");
+      console.log("TEST MODU: Yeni kullanici kayit oldu!");
+      console.log(`Lutfen su linke tiklayarak dogrulayin: ${verificationLink}`);
+      console.log("------------------------------------------");
+    }
+
+    // ARTIK KULLANICIYI DIREKT GIRIS YAPTIRMIYORUZ (Cunku once mailine gidip dogrulamasi lazim)
+    
+    return { success: true, message: "Kayit basarili! Lutfen e-posta adresinize gonderilen dogrulama linkine tiklayin." };
   } catch (error: any) {
     console.error("Register error:", error);
-    return { success: false, error: error?.message || "Kayıt olunurken bir hata oluştu." };
+    return { success: false, error: error?.message || "Kayit olunurken bir hata olustu." };
   }
 }
 
@@ -69,13 +97,18 @@ export async function loginAction(formData: {
     });
 
     if (!user) {
-      return { success: false, error: "E-posta veya şifre hatalı." };
+      return { success: false, error: "E-posta veya sifre hatali." };
+    }
+
+    // E-posta dogrulanmamissa girise izin verme!
+    if (!user.emailVerified) {
+      return { success: false, error: "Lutfen once e-posta adresinizi dogrulayin." };
     }
 
     const isPasswordValid = await bcrypt.compare(formData.password, user.password);
 
     if (!isPasswordValid) {
-      return { success: false, error: "E-posta veya şifre hatalı." };
+      return { success: false, error: "E-posta veya sifre hatali." };
     }
 
     // Set HTTP-only session cookie
@@ -91,7 +124,7 @@ export async function loginAction(formData: {
     return { success: true, username: user.username };
   } catch (error: any) {
     console.error("Login error:", error);
-    return { success: false, error: error?.message || "Giriş yapılırken bir hata oluştu." };
+    return { success: false, error: error?.message || "Giris yapilirken bir hata olustu." };
   }
 }
 
