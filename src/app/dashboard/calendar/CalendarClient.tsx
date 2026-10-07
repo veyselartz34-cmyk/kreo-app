@@ -21,11 +21,16 @@ export default function CalendarClient({ initialMeetings }: { initialMeetings: M
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   
-  // Settings State
-  const [workingHours, setWorkingHours] = useState({
-    weekdays: { active: true, start: "09:00", end: "17:00" },
-    weekends: { active: false, start: "10:00", end: "15:00" },
-  });
+  // Settings State: Day by Day
+  const [workingHours, setWorkingHours] = useState([
+    { day: "Pazartesi", active: true, start: "09:00", end: "17:00" },
+    { day: "Salı", active: true, start: "09:00", end: "17:00" },
+    { day: "Çarşamba", active: true, start: "09:00", end: "17:00" },
+    { day: "Perşembe", active: true, start: "09:00", end: "17:00" },
+    { day: "Cuma", active: true, start: "09:00", end: "17:00" },
+    { day: "Cumartesi", active: false, start: "10:00", end: "15:00" },
+    { day: "Pazar", active: false, start: "10:00", end: "15:00" },
+  ]);
   
   const meetings = initialMeetings.length > 0 ? initialMeetings : [
     {
@@ -73,6 +78,18 @@ export default function CalendarClient({ initialMeetings }: { initialMeetings: M
       setIsSaving(false);
       setIsSettingsOpen(false);
     }, 1000);
+  };
+
+  const handleDayToggle = (index: number) => {
+    const newHours = [...workingHours];
+    newHours[index].active = !newHours[index].active;
+    setWorkingHours(newHours);
+  };
+
+  const handleTimeChange = (index: number, field: "start" | "end", value: string) => {
+    const newHours = [...workingHours];
+    newHours[index][field] = value;
+    setWorkingHours(newHours);
   };
 
   return (
@@ -283,7 +300,7 @@ export default function CalendarClient({ initialMeetings }: { initialMeetings: M
         </div>
       </div>
 
-      {/* Müsaitlik Ayarları Modal */}
+      {/* Müsaitlik Ayarları Modal - GÜN GÜN */}
       <AnimatePresence>
         {isSettingsOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -298,12 +315,12 @@ export default function CalendarClient({ initialMeetings }: { initialMeetings: M
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl relative z-10 overflow-hidden"
+              className="w-full max-w-xl bg-white rounded-[2.5rem] shadow-2xl relative z-10 overflow-hidden max-h-[90vh] flex flex-col"
             >
-              <div className="flex items-center justify-between p-8 border-b border-black/5 bg-zinc-50/50">
+              <div className="flex flex-shrink-0 items-center justify-between p-8 border-b border-black/5 bg-zinc-50/50">
                 <div>
                   <h2 className="text-2xl font-black text-[#1A1A1A]">Müsaitlik Ayarları</h2>
-                  <p className="text-sm font-medium text-zinc-500 mt-1">Randevu alabileceğiniz saatleri belirleyin.</p>
+                  <p className="text-sm font-medium text-zinc-500 mt-1">Randevu alabileceğiniz gün ve saatleri belirleyin.</p>
                 </div>
                 <button 
                   onClick={() => !isSaving && setIsSettingsOpen(false)}
@@ -313,79 +330,63 @@ export default function CalendarClient({ initialMeetings }: { initialMeetings: M
                 </button>
               </div>
               
-              <div className="p-8 space-y-8">
-                {/* Hafta İçi */}
+              <div className="p-8 overflow-y-auto space-y-6 flex-1 hide-scrollbar">
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <label className="text-sm font-black text-[#1A1A1A] flex items-center gap-3">
-                      <input 
-                        type="checkbox" 
-                        checked={workingHours.weekdays.active} 
-                        onChange={(e) => setWorkingHours({...workingHours, weekdays: {...workingHours.weekdays, active: e.target.checked}})}
-                        className="w-5 h-5 rounded border-black/20 text-[#D32F2F] focus:ring-[#D32F2F]" 
-                      />
-                      Hafta İçi (Pzt-Cum)
-                    </label>
-                  </div>
-                  <div className={`flex items-center gap-4 transition-opacity ${!workingHours.weekdays.active ? 'opacity-50 pointer-events-none' : ''}`}>
-                    <div className="flex-1">
-                      <input 
-                        type="time" 
-                        value={workingHours.weekdays.start}
-                        onChange={(e) => setWorkingHours({...workingHours, weekdays: {...workingHours.weekdays, start: e.target.value}})}
-                        className="w-full px-4 py-3 bg-zinc-50 border border-black/5 rounded-xl text-sm font-bold text-[#1A1A1A] outline-none focus:ring-2 focus:ring-[#D32F2F]/30" 
-                      />
-                    </div>
-                    <span className="text-zinc-400 font-bold">-</span>
-                    <div className="flex-1">
-                      <input 
-                        type="time" 
-                        value={workingHours.weekdays.end}
-                        onChange={(e) => setWorkingHours({...workingHours, weekdays: {...workingHours.weekdays, end: e.target.value}})}
-                        className="w-full px-4 py-3 bg-zinc-50 border border-black/5 rounded-xl text-sm font-bold text-[#1A1A1A] outline-none focus:ring-2 focus:ring-[#D32F2F]/30" 
-                      />
-                    </div>
-                  </div>
+                  <label className="block text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Takvim Entegrasyonu</label>
+                  <button className="w-full flex items-center justify-center gap-3 px-6 py-4 border-2 border-black/5 rounded-2xl hover:border-black/10 hover:bg-zinc-50 transition-all font-bold text-[#1A1A1A]">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" className="w-5 h-5" alt="Google" />
+                    Google Calendar İle Bağlan
+                  </button>
                 </div>
 
-                {/* Hafta Sonu */}
-                <div className="pt-6 border-t border-black/5">
-                  <div className="flex items-center justify-between mb-4">
-                    <label className="text-sm font-black text-[#1A1A1A] flex items-center gap-3">
-                      <input 
-                        type="checkbox" 
-                        checked={workingHours.weekends.active} 
-                        onChange={(e) => setWorkingHours({...workingHours, weekends: {...workingHours.weekends, active: e.target.checked}})}
-                        className="w-5 h-5 rounded border-black/20 text-[#D32F2F] focus:ring-[#D32F2F]" 
-                      />
-                      Hafta Sonu (Cmt-Paz)
-                    </label>
-                  </div>
-                  <div className={`flex items-center gap-4 transition-opacity ${!workingHours.weekends.active ? 'opacity-50 pointer-events-none' : ''}`}>
-                    <div className="flex-1">
-                      <input 
-                        type="time" 
-                        value={workingHours.weekends.start}
-                        onChange={(e) => setWorkingHours({...workingHours, weekends: {...workingHours.weekends, start: e.target.value}})}
-                        className="w-full px-4 py-3 bg-zinc-50 border border-black/5 rounded-xl text-sm font-bold text-[#1A1A1A] outline-none focus:ring-2 focus:ring-[#D32F2F]/30" 
-                      />
-                    </div>
-                    <span className="text-zinc-400 font-bold">-</span>
-                    <div className="flex-1">
-                      <input 
-                        type="time" 
-                        value={workingHours.weekends.end}
-                        onChange={(e) => setWorkingHours({...workingHours, weekends: {...workingHours.weekends, end: e.target.value}})}
-                        className="w-full px-4 py-3 bg-zinc-50 border border-black/5 rounded-xl text-sm font-bold text-[#1A1A1A] outline-none focus:ring-2 focus:ring-[#D32F2F]/30" 
-                      />
-                    </div>
+                <div className="pt-4 border-t border-black/5">
+                  <label className="block text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Günlük Çalışma Saatleri</label>
+                  
+                  <div className="space-y-4">
+                    {workingHours.map((wh, idx) => (
+                      <div key={wh.day} className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl border transition-all ${wh.active ? 'bg-zinc-50 border-black/5' : 'bg-transparent border-black/5 opacity-60'}`}>
+                        <label className="text-sm font-black text-[#1A1A1A] flex items-center gap-3 min-w-[120px] cursor-pointer">
+                          <input 
+                            type="checkbox" 
+                            checked={wh.active} 
+                            onChange={() => handleDayToggle(idx)}
+                            className="w-5 h-5 rounded border-black/20 text-[#D32F2F] focus:ring-[#D32F2F]" 
+                          />
+                          {wh.day}
+                        </label>
+                        
+                        {wh.active ? (
+                          <div className="flex items-center gap-3 flex-1 sm:justify-end">
+                            <input 
+                              type="time" 
+                              value={wh.start}
+                              onChange={(e) => handleTimeChange(idx, "start", e.target.value)}
+                              className="px-3 py-2 bg-white border border-black/10 rounded-lg text-sm font-bold text-[#1A1A1A] outline-none focus:ring-2 focus:ring-[#D32F2F]/30 w-28 text-center" 
+                            />
+                            <span className="text-zinc-400 font-bold">-</span>
+                            <input 
+                              type="time" 
+                              value={wh.end}
+                              onChange={(e) => handleTimeChange(idx, "end", e.target.value)}
+                              className="px-3 py-2 bg-white border border-black/10 rounded-lg text-sm font-bold text-[#1A1A1A] outline-none focus:ring-2 focus:ring-[#D32F2F]/30 w-28 text-center" 
+                            />
+                          </div>
+                        ) : (
+                          <div className="text-sm font-bold text-zinc-400 sm:text-right flex-1 px-4">
+                            Kapalı
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
+              </div>
 
+              <div className="p-8 border-t border-black/5 bg-white flex-shrink-0">
                 <button 
                   onClick={handleSaveSettings}
                   disabled={isSaving}
-                  className="w-full py-4 bg-[#D32F2F] text-white text-base font-bold rounded-xl mt-4 hover:bg-[#B71C1C] transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-[#D32F2F] text-white text-base font-bold rounded-xl hover:bg-[#B71C1C] transition-all disabled:opacity-70 flex items-center justify-center gap-2"
                 >
                   {isSaving ? (
                     <>
@@ -402,4 +403,3 @@ export default function CalendarClient({ initialMeetings }: { initialMeetings: M
     </div>
   );
 }
-
