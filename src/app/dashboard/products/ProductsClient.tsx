@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Search, MoreHorizontal, ExternalLink, FileText, CalendarDays, Lock, Eye, Package, Check, Edit2, Trash2 } from "lucide-react";
+import { deleteProductAction } from "@/app/actions/productActions";
 
 type ProductItem = {
   id: string;
@@ -19,6 +20,18 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
   const [filter, setFilter] = useState("Tümü");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return;
+    setIsDeleting(id);
+    const res = await deleteProductAction(id);
+    if (!res.success) {
+      alert(res.error);
+    }
+    setIsDeleting(null);
+    setMenuOpenId(null);
+  };
 
   const mappedProducts = initialProducts.map(p => ({
     ...p,
@@ -188,8 +201,12 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                         <button className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 hover:text-[#1A1A1A]">
                           <Edit2 className="w-4 h-4" /> Düzenle
                         </button>
-                        <button className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50">
-                          <Trash2 className="w-4 h-4" /> Sil
+                        <button 
+                          onClick={() => handleDelete(product.id)}
+                          disabled={isDeleting === product.id}
+                          className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+                        >
+                          <Trash2 className="w-4 h-4" /> {isDeleting === product.id ? "Siliniyor..." : "Sil"}
                         </button>
                       </motion.div>
                     )}

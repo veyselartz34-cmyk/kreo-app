@@ -61,3 +61,33 @@ export async function createProductAction(formData: FormData) {
     return { success: false, error: "Urun eklenirken bir hata olustu." };
   }
 }
+
+export async function deleteProductAction(productId: string) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: "Lutfen once giris yapin." };
+    }
+
+    // Verify ownership
+    const product = await prisma.product.findUnique({
+      where: { id: productId }
+    });
+
+    if (!product || product.userId !== user.id) {
+      return { success: false, error: "Urun bulunamadi veya yetkiniz yok." };
+    }
+
+    await prisma.product.delete({
+      where: { id: productId }
+    });
+
+    revalidatePath("/dashboard/products");
+    revalidatePath(`/${user.username}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return { success: false, error: "Urun silinirken bir hata olustu." };
+  }
+}
