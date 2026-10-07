@@ -37,7 +37,7 @@ export default function NewProductPage() {
     if (!title || !price || isSubmitting) return;
     setIsSubmitting(true);
 
-    const typeLabel = productType === "digital" ? "Dijital Urun" : productType === "calendar" ? "Birebir Gorusme" : "Abonelik";
+    const typeLabel = productType === "digital" ? "Dijital Ürün" : productType === "calendar" ? "Birebir Görüşme" : "Abonelik";
 
     const formData = new FormData();
     formData.append("title", title);
@@ -71,8 +71,8 @@ export default function NewProductPage() {
           <ArrowLeft className="w-5 h-5 text-[#1A1A1A]" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-[#1A1A1A]">Yeni Urun Ekle</h1>
-          <p className="text-zinc-500 text-sm mt-1">Satmaya baslamak icin urununuzu olusturun.</p>
+          <h1 className="text-2xl font-bold text-[#1A1A1A]">Yeni Ürün Ekle</h1>
+          <p className="text-zinc-500 text-sm mt-1">Satmaya başlamak için ürününüzü oluşturun.</p>
         </div>
       </div>
 
@@ -93,7 +93,7 @@ export default function NewProductPage() {
                 className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${productType === 'digital' ? 'border-[#0288D1] bg-[#0288D1]/5' : 'border-black/5 bg-white hover:border-black/10'}`}
               >
                 <FileText className={`w-6 h-6 ${productType === 'digital' ? 'text-[#0288D1]' : 'text-zinc-400'}`} />
-                <span className={`text-sm font-bold ${productType === 'digital' ? 'text-[#0288D1]' : 'text-zinc-600'}`}>Dijital Urun</span>
+                <span className={`text-sm font-bold ${productType === 'digital' ? 'text-[#0288D1]' : 'text-zinc-600'}`}>Dijital Ürün</span>
               </button>
               <button 
                 onClick={() => setProductType("calendar")}
@@ -122,23 +122,23 @@ export default function NewProductPage() {
             <h3 className="text-sm font-bold text-[#1A1A1A] mb-4 uppercase tracking-wider">2. Temel Bilgiler</h3>
             
             <div>
-              <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Urun Adi</label>
+              <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Ürün Adı</label>
               <input 
                 type="text" 
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Orn: 1 Aylik Figma Egitimi" 
+                placeholder="Örn: 1 Aylık Figma Eğitimi" 
                 className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:ring-2 focus:ring-[#D32F2F]/20 focus:border-[#D32F2F] outline-none transition-all text-sm font-medium" 
               />
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Aciklama</label>
+              <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Açıklama</label>
               <textarea 
                 rows={4} 
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
-                placeholder="Urununuzun neler icerdigini detaylica anlatin..." 
+                placeholder="Ürününüzün neler içerdiğini detaylıca anlatın..." 
                 className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:ring-2 focus:ring-[#D32F2F]/20 focus:border-[#D32F2F] outline-none transition-all text-sm resize-none"
               ></textarea>
             </div>
@@ -188,7 +188,7 @@ export default function NewProductPage() {
               )}
               {icon && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                   <p className="text-white font-bold text-sm">Degistir</p>
+                   <p className="text-white font-bold text-sm">Değiştir</p>
                 </div>
               )}
               <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
@@ -218,27 +218,27 @@ export default function NewProductPage() {
         <div className="lg:col-span-1">
           <div className="sticky top-24 space-y-6">
             
-            {/* Canli Onizleme Karti */}
+            {/* Canlı Önizleme Karti */}
             <div className="bg-white border border-black/5 shadow-xl shadow-black/5 rounded-3xl p-6">
-              <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 text-center">Canli Onizleme</p>
+              <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 text-center">Canlı Önizleme</p>
               <div className="w-full aspect-[4/3] bg-zinc-100 rounded-2xl border border-black/5 mb-4 flex items-center justify-center overflow-hidden">
                 {icon ? (
                   <img src={icon} alt="Preview" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-zinc-400 text-sm font-medium">Kapak Gorseli</span>
+                  <span className="text-zinc-400 text-sm font-medium">Kapak Görseli</span>
                 )}
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D32F2F]/10 text-[#D32F2F] text-xs font-bold mb-3">
                 {productType === "digital" && <FileText className="w-3.5 h-3.5" />}
                 {productType === "calendar" && <CalendarDays className="w-3.5 h-3.5" />}
                 {productType === "subscription" && <Lock className="w-3.5 h-3.5" />}
-                {productType === "digital" ? "Dijital Urun" : productType === "calendar" ? "Randevu" : "Abonelik"}
+                {productType === "digital" ? "Dijital Ürün" : productType === "calendar" ? "Randevu" : "Abonelik"}
               </div>
               <h4 className="text-lg font-bold text-[#1A1A1A] leading-tight mb-2 break-words">
-                {title || "Ornek Urun Basligi"}
+                {title || "Örnek Ürün Başlığı"}
               </h4>
               <p className="text-sm text-zinc-500 line-clamp-2 mb-4 break-words">
-                {desc || "Urun aciklamasi burada gorunecek. Musterileriniz bu ozeti okuyarak karar verecek."}
+                {desc || "Ürün açıklaması burada görünecek. Müşterileriniz bu özeti okuyarak karar verecek."}
               </p>
               <div className="text-2xl font-black text-[#1A1A1A]">
                 {price ? `₺${price}` : "₺499"}
@@ -254,15 +254,15 @@ export default function NewProductPage() {
               }`}
             >
               {isSaved ? (
-                <><CheckCircle2 className="w-5 h-5 text-white" /> Urun Olusturuldu!</>
+                <><CheckCircle2 className="w-5 h-5 text-white" /> Ürün Oluşturuldu!</>
               ) : isSubmitting ? (
-                "Olusturuluyor..."
+                "Oluşturuluyor..."
               ) : (
-                "Urunu Yayinla"
+                "Ürünü Yayınla"
               )}
             </button>
             <p className="text-xs text-center text-zinc-400 mt-4">
-              Yayinla'ya bastiktan sonra urun vitrininizde gorunmeye baslar.
+              Yayınla'ya bastıktan sonra ürün vitrininizde görünmeye başlar.
             </p>
 
           </div>

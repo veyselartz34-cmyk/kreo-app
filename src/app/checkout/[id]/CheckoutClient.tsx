@@ -58,8 +58,8 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
           <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-10 h-10 text-green-500" />
           </div>
-          <h2 className="text-2xl font-bold text-[#1A1A1A] mb-2">Odeme Basarili!</h2>
-          <p className="text-zinc-500 mb-8">Siparis detaylariniz e-posta adresinize gonderildi.</p>
+          <h2 className="text-2xl font-bold text-[#1A1A1A] mb-2">Ödeme Başarılı!</h2>
+          <p className="text-zinc-500 mb-8">Sipariş detaylarınız e-posta adresinize gönderildi.</p>
           <div className="p-4 bg-zinc-50 rounded-2xl mb-8 text-left">
             <p className="text-sm font-bold text-[#1A1A1A] mb-1">{product.title}</p>
             <p className="text-xs text-zinc-500">Tutar: ₺{product.price.toFixed(2)}</p>
@@ -67,12 +67,12 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
 
           {product.fileUrl ? (
             <a href={product.fileUrl} download target="_blank" className="block w-full py-3.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors mb-4">
-              Dosyayi Indir
+              Dosyayı İndir
             </a>
           ) : null}
 
           <Link href={`/${product.creatorUsername}`} className="block w-full py-3.5 bg-[#1A1A1A] text-white text-sm font-bold rounded-xl hover:bg-black transition-colors">
-            Vitrine Don
+            Vitrine Dön
           </Link>
         </motion.div>
       </div>
@@ -81,21 +81,21 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] flex flex-col md:flex-row">
-      {/* Sol Taraf: Odeme Formu */}
+      {/* Sol Taraf: Ödeme Formu */}
       <div className="flex-1 p-6 md:p-12 lg:p-20 flex flex-col justify-center order-2 md:order-1 relative z-10">
         <Link href={`/${product.creatorUsername}`} className="inline-flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-[#1A1A1A] transition-colors mb-12">
-          <ArrowLeft className="w-4 h-4" /> Geri Don
+          <ArrowLeft className="w-4 h-4" /> Geri Dön
         </Link>
 
         <div className="max-w-md w-full mx-auto md:mx-0">
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-[#1A1A1A]">Odeme Bilgileri</h1>
-            <p className="text-sm text-zinc-500 mt-1">Guvenli iyzico altyapisi ile odemenizi tamamlayin.</p>
+            <h1 className="text-2xl font-bold text-[#1A1A1A]">Ödeme Bilgileri</h1>
+            <p className="text-sm text-zinc-500 mt-1">Güvenli iyzico altyapısı ile ödemenizi tamamlayın.</p>
           </div>
 
           <form onSubmit={handlePayment} className="space-y-6">
             <div>
-              <h3 className="text-sm font-bold text-[#1A1A1A] mb-3">Iletisim</h3>
+              <h3 className="text-sm font-bold text-[#1A1A1A] mb-3">İletişim</h3>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                 <input 
@@ -118,7 +118,7 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
                     type="text" 
                     required
                     maxLength={19}
-                    placeholder="Kart Numarasi" 
+                    placeholder="Kart Numarası" 
                     className="w-full pl-10 pr-4 py-3 bg-transparent outline-none text-sm font-medium"
                   />
                 </div>
@@ -142,7 +142,7 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Kart Uzerindeki Isim</label>
+              <label className="block text-sm font-bold text-[#1A1A1A] mb-2">Kart Üzerindeki İsim</label>
               <input 
                 type="text" 
                 required
@@ -163,18 +163,18 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
               {isProcessing ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                <><Lock className="w-4 h-4" /> ₺{product.price.toFixed(2)} Ode</>
+                <><Lock className="w-4 h-4" /> ₺{product.price.toFixed(2)} Öde</>
               )}
             </button>
             <div className="flex items-center justify-center gap-2 text-zinc-400 mt-4">
               <ShieldCheck className="w-4 h-4" />
-              <span className="text-xs font-medium">256-bit SSL Guvenli Odeme</span>
+              <span className="text-xs font-medium">256-bit SSL Guvenli Ödeme</span>
             </div>
           </form>
         </div>
       </div>
 
-      {/* Sag Taraf: Siparis Ozeti */}
+      {/* Sag Taraf: Sipariş Özeti */}
       <div className="flex-1 bg-zinc-50 border-l border-black/5 p-6 md:p-12 lg:p-20 flex flex-col justify-center order-1 md:order-2">
         <div className="max-w-md w-full mx-auto md:mx-0">
           <div className="flex items-start gap-4 mb-8">
@@ -182,7 +182,7 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
               {product.icon ? (
                 <img src={product.icon} alt="product icon" className="w-full h-full object-cover" />
               ) : (
-                product.type === "Birebir Gorusme" ? <CalendarDays className="w-8 h-8 text-orange-500" /> : <FileText className="w-8 h-8 text-blue-500" />
+                product.type === "Birebir Görüşme" ? <CalendarDays className="w-8 h-8 text-orange-500" /> : <FileText className="w-8 h-8 text-blue-500" />
               )}
             </div>
             <div>
@@ -204,7 +204,7 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
               <span>₺0.00</span>
             </div>
             <div className="flex justify-between items-center pt-3 border-t border-black/5 mt-3">
-              <span className="text-base font-bold text-[#1A1A1A]">Odenecek Tutar</span>
+              <span className="text-base font-bold text-[#1A1A1A]">Ödenecek Tutar</span>
               <span className="text-2xl font-black text-[#1A1A1A]">₺{product.price.toFixed(2)}</span>
             </div>
           </div>
@@ -213,8 +213,8 @@ export default function CheckoutClient({ product }: { product: ProductData }) {
               <span className="text-white font-black text-xs">iyzi</span>
             </div>
             <div>
-              <p className="text-xs font-bold text-[#1A1A1A]">iyzico Korumali Alisveris</p>
-              <p className="text-[10px] text-zinc-500">Odemeniz iyzico guvencesiyle gerceklesmektedir.</p>
+              <p className="text-xs font-bold text-[#1A1A1A]">iyzico Korumalı Alışveriş</p>
+              <p className="text-[10px] text-zinc-500">Ödemeniz iyzico guvencesiyle gerceklesmektedir.</p>
             </div>
           </div>
         </div>

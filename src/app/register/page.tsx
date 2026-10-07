@@ -20,7 +20,7 @@ export default function Register() {
     setError("");
     setSuccessMsg("");
     if (!name || !email || !password || !username) {
-      setError("Lutfen tum alanlari doldurun.");
+      setError("Lütfen tüm alanları doldurun.");
       return;
     }
 
@@ -28,7 +28,7 @@ export default function Register() {
     const res = await registerAction({ name, username, email, password });
 
     if (res.success) {
-      setSuccessMsg(res.message || "Kayit basarili! Lutfen e-postanizi kontrol edin.");
+      setSuccessMsg(res.message || "Kayıt başarılı! Lütfen e-postanızı kontrol edin.");
       setIsSubmitting(false);
       // Clear form
       setName("");
@@ -36,7 +36,7 @@ export default function Register() {
       setEmail("");
       setPassword("");
     } else {
-      setError(res.error || "Kayit olunurken bir sorun olustu.");
+      setError(res.error || "Kayıt olunurken bir sorun oluştu.");
       setIsSubmitting(false);
     }
   };
@@ -49,13 +49,13 @@ export default function Register() {
           href="/" 
           className="absolute top-8 left-8 sm:left-16 md:left-24 flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-[#1A1A1A] transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" /> Ana Sayfaya Don
+          <ArrowLeft className="w-4 h-4" /> Ana Sayfaya Dön
         </Link>
 
         <div className="max-w-sm w-full mx-auto mt-12 md:mt-0">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A] mb-2">Hesap Olustur</h1>
-            <p className="text-sm text-zinc-600">Kreo'da ucretsiz vitrinini ac ve kazanmaya basla.</p>
+            <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A] mb-2">Hesap Oluştur</h1>
+            <p className="text-sm text-zinc-600">Kreo'da ücretsiz vitrinini aç ve kazanmaya başla.</p>
           </div>
 
           {error && (
@@ -70,7 +70,7 @@ export default function Register() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               {successMsg}
-              <Link href="/login" className="block mt-4 text-[#D32F2F] hover:underline font-bold">Giris Yapa Git</Link>
+              <Link href="/login" className="block mt-4 text-[#D32F2F] hover:underline font-bold">Giriş Yapa Git</Link>
             </div>
           ) : (
             <div className="space-y-4">
@@ -87,7 +87,7 @@ export default function Register() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#1A1A1A] mb-1.5">Kullanici Adi (Vitrin Linkin)</label>
+                  <label className="block text-sm font-medium text-[#1A1A1A] mb-1.5">Kullanıcı Adı (Vitrin Linkin)</label>
                   <div className="relative flex items-center">
                     <span className="absolute left-4 text-xs font-bold text-zinc-400">kreo.com/</span>
                     <input 
@@ -112,7 +112,7 @@ export default function Register() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#1A1A1A] mb-1.5">Sifre</label>
+                  <label className="block text-sm font-medium text-[#1A1A1A] mb-1.5">Şifre</label>
                   <input 
                     type="password" 
                     required
@@ -131,13 +131,13 @@ export default function Register() {
                       isSubmitting ? 'bg-zinc-400 cursor-not-allowed' : 'bg-[#D32F2F] hover:bg-[#C62828] shadow-red-500/20'
                     }`}
                   >
-                    {isSubmitting ? "Kayit Yapiliyor..." : "Kreo'ya Katil"}
+                    {isSubmitting ? "Kayıt Yapılıyor..." : "Kreo'ya Katıl"}
                   </button>
                 </div>
               </form>
 
               <p className="text-center text-sm text-zinc-600 mt-8">
-                Zaten hesabin var mi? <Link href="/login" className="text-[#D32F2F] font-semibold hover:underline">Giris Yap</Link>
+                Zaten hesabın var mı? <Link href="/login" className="text-[#D32F2F] font-semibold hover:underline">Giriş Yap</Link>
               </p>
             </div>
           )}
@@ -148,9 +148,9 @@ export default function Register() {
         badgeText="Senin Sahnene Hos Geldin"
         title="Kitleleri"
         highlight="gelire"
-        description="donusturmenin en zarif yolu. Dijital urunler, danismanlik seanslari ve ucretli toplulugun icin ihtiyacin olan tek platform."
-        metricLabel="Turkiye'nin Secimi"
-        metricDesc="Binlerce ureticiye katil"
+        description="dönüştürmenin en zarif yolu. Dijital ürünler, danışmanlık seansları ve ücretli topluluğun için ihtiyacın olan tek platform."
+        metricLabel="Türkiye'nin Seçimi"
+        metricDesc="Binlerce üreticiye katıl"
       />
     </main>
   );
