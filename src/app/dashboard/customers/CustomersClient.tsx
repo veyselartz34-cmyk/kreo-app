@@ -21,50 +21,7 @@ export default function CustomersClient({ initialCustomers }: { initialCustomers
   const [activeFilter, setActiveFilter] = useState("Tümü");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const mockCustomers = [
-    {
-      id: "CUST-001",
-      name: "Ahmet Yılmaz",
-      email: "ahmet@example.com",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop",
-      product: "Girişimcilik Danışmanlığı",
-      amount: "₺1,200",
-      date: "24 Eki 2026",
-      status: "Aktif",
-    },
-    {
-      id: "CUST-002",
-      name: "Ayşe Kaya",
-      email: "ayse@example.com",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop",
-      product: "Kreo Pro Aboneliği",
-      amount: "₺499",
-      date: "23 Eki 2026",
-      status: "Aktif",
-    },
-    {
-      id: "CUST-003",
-      name: "Caner Demir",
-      email: "caner@example.com",
-      avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&auto=format&fit=crop",
-      product: "Notion Verimlilik Şablonu",
-      amount: "₺150",
-      date: "20 Eki 2026",
-      status: "Aktif",
-    },
-    {
-      id: "CUST-004",
-      name: "Elif Aydın",
-      email: "elif@example.com",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&auto=format&fit=crop",
-      product: "Birebir Görüşme",
-      amount: "₺800",
-      date: "15 Eki 2026",
-      status: "Pasif",
-    }
-  ];
-
-  const customers = initialCustomers.length > 0 ? initialCustomers : mockCustomers;
+  const customers = initialCustomers;
 
   const handleDownload = () => {
     setIsDownloading(true);

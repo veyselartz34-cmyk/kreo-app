@@ -22,6 +22,9 @@ model User {
   isSubscribed       Boolean   @default(false)
   emailNotifications Boolean   @default(true)
   
+  // Vitrin (Storefront) ayarlari
+  themeColor         String    @default("#1A1A1A")
+  
   // Iyzico (Marketplace) bilgileri
   iyzicoApiKey       String?
   iyzicoSecretKey    String?

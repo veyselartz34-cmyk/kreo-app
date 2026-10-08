@@ -11,21 +11,32 @@ export default async function CustomersPage() {
     return <CustomersClient initialCustomers={[]} />;
   }
 
-  const meetings = await prisma.meeting.findMany({
-    where: { userId: user.id },
+  // Fetch actual customers from the DB
+  const dbCustomers = await prisma.customer.findMany({
+    where: { creatorId: user.id },
+    include: {
+      orders: {
+        include: { product: true },
+        orderBy: { createdAt: "desc" },
+        take: 1
+      }
+    },
     orderBy: { createdAt: "desc" },
   });
 
-  const dbCustomers = meetings.map(m => ({
-    id: m.id,
-    name: m.clientName,
-    email: m.clientEmail,
-    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=100&auto=format&fit=crop",
-    product: m.title,
-    amount: m.title.includes("Mentorluk") ? "₺999" : m.title.includes("Sistem") ? "₺499" : "₺199",
-    date: m.date,
-    status: m.status,
-  }));
+  const customers = dbCustomers.map(c => {
+    const lastOrder = c.orders[0];
+    return {
+      id: c.id,
+      name: c.name,
+      email: c.email,
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=random`,
+      product: lastOrder ? lastOrder.product.title : "Kayıtlı",
+      amount: lastOrder ? `₺${lastOrder.amount}` : "₺0",
+      date: new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "short", year: "numeric" }).format(new Date(c.createdAt)),
+      status: "Aktif" // or calculate based on logic
+    };
+  });
 
-  return <CustomersClient initialCustomers={dbCustomers} />;
+  return <CustomersClient initialCustomers={customers} />;
 }
