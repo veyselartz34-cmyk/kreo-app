@@ -202,7 +202,7 @@ export default function OverviewClient({
                     <RechartsTooltip 
                       contentStyle={{ backgroundColor: '#1A1A1A', borderRadius: '16px', border: 'none', color: '#fff', fontWeight: 700, padding: '12px 20px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)' }}
                       itemStyle={{ color: '#fff', fontWeight: 900 }}
-                      formatter={(value: number) => [`₺${value}`, 'Ciro']}
+                      formatter={(value: any) => [`₺${value}`, 'Ciro']}
                       labelStyle={{ color: '#A1A1AA', marginBottom: '4px', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}
                     />
                     <Area 
