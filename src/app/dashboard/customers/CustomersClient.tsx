@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Filter, Download, MoreHorizontal, Mail, ArrowUpRight, CheckCircle2, ChevronDown, Check } from "lucide-react";
+import { Search, Filter, Download, MoreHorizontal, Mail, ArrowUpRight, CheckCircle2, Star, Users } from "lucide-react";
 
 type Customer = {
   id: string;
@@ -18,8 +18,53 @@ type Customer = {
 export default function CustomersClient({ initialCustomers }: { initialCustomers: Customer[] }) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadComplete, setDownloadComplete] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("Tümü");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const mockCustomers = [
+    {
+      id: "CUST-001",
+      name: "Ahmet Yılmaz",
+      email: "ahmet@example.com",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop",
+      product: "Girişimcilik Danışmanlığı",
+      amount: "₺1,200",
+      date: "24 Eki 2026",
+      status: "Aktif",
+    },
+    {
+      id: "CUST-002",
+      name: "Ayşe Kaya",
+      email: "ayse@example.com",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop",
+      product: "Kreo Pro Aboneliği",
+      amount: "₺499",
+      date: "23 Eki 2026",
+      status: "Aktif",
+    },
+    {
+      id: "CUST-003",
+      name: "Caner Demir",
+      email: "caner@example.com",
+      avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&auto=format&fit=crop",
+      product: "Notion Verimlilik Şablonu",
+      amount: "₺150",
+      date: "20 Eki 2026",
+      status: "Aktif",
+    },
+    {
+      id: "CUST-004",
+      name: "Elif Aydın",
+      email: "elif@example.com",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&auto=format&fit=crop",
+      product: "Birebir Görüşme",
+      amount: "₺800",
+      date: "15 Eki 2026",
+      status: "Pasif",
+    }
+  ];
+
+  const customers = initialCustomers.length > 0 ? initialCustomers : mockCustomers;
 
   const handleDownload = () => {
     setIsDownloading(true);
@@ -30,151 +75,172 @@ export default function CustomersClient({ initialCustomers }: { initialCustomers
     }, 1500);
   };
 
-  // Veritabanından gelen gerçek veriyi kullanıyoruz!
-  const filteredCustomers = initialCustomers.filter(c => activeFilter === "Tümü" || c.status === activeFilter);
-
+  const filteredCustomers = customers.filter(c => {
+    const matchesFilter = activeFilter === "Tümü" || c.status === activeFilter;
+    const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) || c.email.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
 
   return (
-    <div className="max-w-6xl mx-auto pb-12">
+    <div className="max-w-7xl mx-auto pb-24 text-[#1A1A1A]">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
         <div>
-          <h1 className="text-2xl font-bold text-[#1A1A1A]">Müşteriler</h1>
-          <p className="text-zinc-500 text-sm mt-1">Ürünlerini satın alan ve randevu alan tüm müşterilerini yönet.</p>
+          <h1 className="text-4xl font-black text-[#1A1A1A] tracking-tight">Müşteri Listesi</h1>
+          <p className="text-zinc-500 text-base mt-2 font-medium">Ürünlerinizi satın alan tüm müşterilerinizi ve abonelerinizi yönetin.</p>
         </div>
         <div className="flex items-center gap-3">
           <button 
             onClick={handleDownload}
             disabled={isDownloading || downloadComplete}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-black/10 text-[#1A1A1A] text-sm font-semibold rounded-xl hover:bg-zinc-50 transition-all shadow-sm min-w-[120px]"
+            className="flex items-center gap-2 px-6 py-3 bg-white border border-black/5 text-[#1A1A1A] text-sm font-bold rounded-xl hover:bg-zinc-50 transition-colors shadow-sm disabled:opacity-50"
           >
             {isDownloading ? (
-              <div className="w-4 h-4 border-2 border-zinc-300 border-t-[#1A1A1A] rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
             ) : downloadComplete ? (
-              <><CheckCircle2 className="w-4 h-4 text-green-600" /> İndirildi</>
+              <CheckCircle2 className="w-4 h-4 text-green-600" />
             ) : (
-              <><Download className="w-4 h-4" /> CSV İndir</>
+              <Download className="w-4 h-4" />
             )}
+            {downloadComplete ? "İndirildi" : "Dışa Aktar (CSV)"}
           </button>
         </div>
       </div>
 
-      {/* Filters & Search */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-          <input 
-            type="text" 
-            placeholder="İsim veya E-posta ara..." 
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-black/5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D32F2F]/20 focus:border-[#D32F2F] transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
-          />
+      {/* KPI Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div className="bg-white p-6 rounded-3xl border border-black/5 shadow-sm">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <Users className="w-5 h-5" />
+            </div>
+            <p className="text-sm font-bold text-zinc-500">Toplam Müşteri</p>
+          </div>
+          <div className="flex items-end gap-3">
+            <h3 className="text-3xl font-black text-[#1A1A1A]">{customers.length}</h3>
+            <span className="flex items-center text-xs font-bold text-green-600 mb-1.5"><ArrowUpRight className="w-4 h-4" /> Yeni 12</span>
+          </div>
         </div>
-        <div className="relative">
-          <button 
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            onBlur={() => setTimeout(() => setIsFilterOpen(false), 200)}
-            className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border text-sm font-medium rounded-xl transition-colors shadow-[0_2px_10px_rgba(0,0,0,0.02)] ${
-              isFilterOpen ? 'border-black/20 text-[#1A1A1A]' : 'border-black/5 text-zinc-600 hover:bg-zinc-50'
-            }`}
-          >
-            <Filter className="w-4 h-4" />
-            Filtrele: {activeFilter}
-            <ChevronDown className={`w-4 h-4 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
-          </button>
-
-          <AnimatePresence>
-            {isFilterOpen && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 top-12 w-48 bg-white border border-black/5 shadow-xl rounded-xl py-2 z-20"
-              >
-                <div className="px-3 py-2 text-xs font-bold text-zinc-400 uppercase tracking-wider">Duruma Göre</div>
-                {["Tümü", "Başarılı", "İade Edildi"].map(f => (
-                  <button 
-                    key={f}
-                    onClick={() => setActiveFilter(f)}
-                    className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 hover:text-[#1A1A1A]"
-                  >
-                    {f}
-                    {activeFilter === f && <Check className="w-4 h-4 text-[#D32F2F]" />}
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+        <div className="bg-white p-6 rounded-3xl border border-black/5 shadow-sm">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
+              <Star className="w-5 h-5" />
+            </div>
+            <p className="text-sm font-bold text-zinc-500">Aktif Aboneler</p>
+          </div>
+          <div className="flex items-end gap-3">
+            <h3 className="text-3xl font-black text-[#1A1A1A]">{customers.filter(c => c.status === "Aktif").length}</h3>
+            <span className="flex items-center text-xs font-bold text-zinc-400 mb-1.5">Kişi</span>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-3xl border border-black/5 shadow-sm">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center">
+              <Mail className="w-5 h-5" />
+            </div>
+            <p className="text-sm font-bold text-zinc-500">Bülten İzni</p>
+          </div>
+          <div className="flex items-end gap-3">
+            <h3 className="text-3xl font-black text-[#1A1A1A]">%94</h3>
+            <span className="flex items-center text-xs font-bold text-green-600 mb-1.5"><ArrowUpRight className="w-4 h-4" /> Yüksek</span>
+          </div>
         </div>
       </div>
 
-      {/* Customers List */}
       <motion.div 
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="bg-white rounded-3xl border border-black/5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] overflow-hidden"
+        className="bg-white rounded-[2.5rem] border border-black/5 shadow-sm overflow-hidden"
       >
+        <div className="p-6 border-b border-black/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="İsim veya e-posta ara..." 
+              className="w-full pl-12 pr-4 py-3 bg-zinc-50 border border-black/5 rounded-xl text-sm font-bold text-[#1A1A1A] focus:ring-2 focus:ring-[#D32F2F]/30 outline-none transition-all placeholder:text-zinc-400"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            {["Tümü", "Aktif", "Pasif"].map((filter) => (
+              <button 
+                key={filter}
+                onClick={() => setActiveFilter(filter)}
+                className={`px-5 py-2.5 text-sm font-bold rounded-xl transition-colors ${
+                  activeFilter === filter 
+                    ? "bg-zinc-100 text-[#1A1A1A]" 
+                    : "text-zinc-500 hover:bg-zinc-50"
+                }`}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-black/5 bg-zinc-50/50">
-                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Müşteri</th>
-                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Satın Alınan Ürün</th>
-                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Tarih</th>
-                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Tutar</th>
-                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Durum</th>
-                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider text-right"></th>
+              <tr className="bg-zinc-50/50">
+                <th className="py-5 px-6 text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-black/5">Müşteri</th>
+                <th className="py-5 px-6 text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-black/5">Son Satın Alım</th>
+                <th className="py-5 px-6 text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-black/5">Tarih</th>
+                <th className="py-5 px-6 text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-black/5">Harcama</th>
+                <th className="py-5 px-6 text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-black/5">Durum</th>
+                <th className="py-5 px-6 text-xs font-black text-zinc-500 uppercase tracking-widest border-b border-black/5 text-right">İşlem</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/5">
-              {filteredCustomers.map((customer) => (
-                <tr key={customer.id} className="hover:bg-zinc-50/50 transition-colors group">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
+              {filteredCustomers.length > 0 ? filteredCustomers.map((customer, idx) => (
+                <tr key={idx} className="hover:bg-zinc-50/50 transition-colors group">
+                  <td className="py-4 px-6">
+                    <div className="flex items-center gap-4">
                       <img src={customer.avatar} alt={customer.name} className="w-10 h-10 rounded-full object-cover border border-black/5" />
                       <div>
-                        <p className="text-sm font-bold text-[#1A1A1A] group-hover:text-[#D32F2F] transition-colors">{customer.name}</p>
+                        <p className="text-sm font-bold text-[#1A1A1A]">{customer.name}</p>
                         <p className="text-xs font-medium text-zinc-500 mt-0.5">{customer.email}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-medium text-[#1A1A1A]">{customer.product}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-medium text-zinc-500">{customer.date}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-bold text-[#1A1A1A]">{customer.amount}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${
-                      customer.status === "Başarılı" ? "bg-green-100 text-green-700" : "bg-zinc-100 text-zinc-600"
+                  <td className="py-4 px-6 text-sm font-medium text-zinc-600">{customer.product}</td>
+                  <td className="py-4 px-6 text-sm font-medium text-zinc-500">{customer.date}</td>
+                  <td className="py-4 px-6 text-sm font-black text-[#1A1A1A]">{customer.amount}</td>
+                  <td className="py-4 px-6">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${
+                      customer.status === 'Aktif' || customer.status === 'Yaklaşıyor' ? 'bg-green-100 text-green-700' : 'bg-zinc-100 text-zinc-600'
                     }`}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${customer.status === "Başarılı" ? "bg-green-500" : "bg-zinc-400"}`}></span>
                       {customer.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="py-4 px-6 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-[#1A1A1A] hover:bg-black/5 rounded-lg transition-colors" title="E-posta Gönder">
+                      <button className="p-2 text-zinc-400 hover:text-[#1A1A1A] hover:bg-white rounded-lg border border-transparent hover:border-black/10 transition-all shadow-sm" title="E-posta Gönder">
                         <Mail className="w-4 h-4" />
                       </button>
-                      <button className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-[#1A1A1A] hover:bg-black/5 rounded-lg transition-colors" title="Detaylar">
-                        <ArrowUpRight className="w-4 h-4" />
+                      <button className="p-2 text-zinc-400 hover:text-[#1A1A1A] hover:bg-white rounded-lg border border-transparent hover:border-black/10 transition-all shadow-sm" title="Seçenekler">
+                        <MoreHorizontal className="w-4 h-4" />
                       </button>
                     </div>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-sm font-medium text-zinc-500">
+                    Arama kriterlerinize uygun müşteri bulunamadı.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
-        <div className="p-4 border-t border-black/5 bg-zinc-50/30 flex items-center justify-between text-sm text-zinc-500">
-          <span>Toplam {filteredCustomers.length} müşteri gösteriliyor.</span>
-          <div className="flex items-center gap-2">
-            <button className="px-3 py-1 border border-black/10 rounded-lg bg-white hover:bg-zinc-50 disabled:opacity-50">Önceki</button>
-            <button className="px-3 py-1 border border-black/10 rounded-lg bg-white hover:bg-zinc-50">Sonraki</button>
+        
+        <div className="p-6 border-t border-black/5 flex items-center justify-between text-sm font-medium text-zinc-500">
+          <p>Toplam {filteredCustomers.length} müşteri listeleniyor.</p>
+          <div className="flex gap-2">
+            <button className="px-4 py-2 border border-black/5 rounded-lg hover:bg-zinc-50 disabled:opacity-50" disabled>Önceki</button>
+            <button className="px-4 py-2 border border-black/5 rounded-lg hover:bg-zinc-50 bg-white shadow-sm disabled:opacity-50" disabled={filteredCustomers.length < 10}>Sonraki</button>
           </div>
         </div>
       </motion.div>
