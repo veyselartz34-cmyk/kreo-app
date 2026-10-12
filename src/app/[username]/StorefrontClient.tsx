@@ -263,14 +263,14 @@ export default function CreatorStorefront({
                       {consultingProduct.price}
                     </span>
                     <Link 
-                      href={`/checkout/${consultingProduct.id}`}
+                      href={`/${username}/${consultingProduct.id}`}
                       className="w-full sm:w-auto px-8 py-4 text-white text-sm md:text-base font-bold rounded-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg"
                       style={{ 
                         backgroundColor: activeColor,
                         boxShadow: `0 8px 24px ${activeColor}35`
                       }}
                     >
-                      Hemen Randevu Al <ArrowRight className="w-5 h-5" />
+                      Detayları Gör & Randevu Al <ArrowRight className="w-5 h-5" />
                     </Link>
                   </div>
                 </div>
@@ -293,7 +293,7 @@ export default function CreatorStorefront({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {otherProducts.map((product) => (
                 <Link 
-                  href={`/checkout/${product.id}`}
+                  href={`/${username}/${product.id}`}
                   key={product.id}
                 >
                   <motion.div 
