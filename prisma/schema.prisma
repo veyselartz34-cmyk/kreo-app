@@ -62,6 +62,10 @@ model Product {
   fileUrl     String?  
   fileSize    String?
 
+  // Tanitim Sayfasi Detaylari (Landing Page)
+  features    String?  // JSON string: string[] ("Bu Pakette Neler Var?")
+  faqs        String?  // JSON string: {q: string, a: string}[] ("Sikca Sorulan Sorular")
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

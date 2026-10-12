@@ -18,6 +18,8 @@ type ProductDetails = {
   icon?: string | null;
   color?: string | null;
   fileSize?: string | null;
+  features?: string | null;
+  faqs?: string | null;
   createdAt: string;
 };
 
@@ -82,8 +84,22 @@ export default function ProductLandingClient({
   const isConsulting = product.type.includes("Görüşme") || product.type.includes("Gorusme") || product.type.includes("Danışmanlık");
   const isSubscription = product.type.includes("Abonelik");
 
-  // Türe göre "Neler Dahil?" maddeleri
-  const includedItems = isConsulting
+  // Özel paket içeriği var mı kontrol et
+  let customFeatures: string[] | null = null;
+  if (product.features) {
+    try {
+      const parsed = JSON.parse(product.features);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        customFeatures = parsed.filter(Boolean);
+      }
+    } catch {
+      const lines = product.features.split("\n").map(l => l.trim()).filter(Boolean);
+      if (lines.length > 0) customFeatures = lines;
+    }
+  }
+
+  // Türe göre varsayılan "Neler Dahil?" maddeleri
+  const defaultIncludedItems = isConsulting
     ? [
         "60 Dakika Birebir Canlı Seans (Google Meet / Zoom)",
         "Görüşme Öncesi Hazırlık ve İhtiyaç Analizi Formu",
@@ -106,8 +122,21 @@ export default function ProductLandingClient({
         "Tek Seferlik Ödeme ile Sınırsız Kullanım Hakkı",
       ];
 
-  // Sıkça Sorulan Sorular
-  const faqs = isConsulting
+  const includedItems = (customFeatures && customFeatures.length > 0) ? customFeatures : defaultIncludedItems;
+
+  // Özel SSS var mı kontrol et
+  let customFaqs: { q: string; a: string }[] | null = null;
+  if (product.faqs) {
+    try {
+      const parsed = JSON.parse(product.faqs);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        customFaqs = parsed.filter(f => f.q && f.a);
+      }
+    } catch {}
+  }
+
+  // Varsayılan Sıkça Sorulan Sorular
+  const defaultFaqs = isConsulting
     ? [
         {
           q: "Görüşme tarihi ve saatini nasıl belirleyeceğim?",
@@ -140,6 +169,8 @@ export default function ProductLandingClient({
           a: "Herhangi bir sorun yaşarsanız bu sayfadaki satıcı profili üzerinden doğrudan satıcıya ulaşabilir veya e-posta ile destek talep edebilirsiniz.",
         },
       ];
+
+  const faqs = (customFaqs && customFaqs.length > 0) ? customFaqs : defaultFaqs;
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] text-[#1A1A1A] pb-32 font-sans selection:bg-[#FBC02D] selection:text-[#1A1A1A] relative">

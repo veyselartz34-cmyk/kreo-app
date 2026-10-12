@@ -58,6 +58,8 @@ export default async function ProductLandingPage({
         icon: product.icon,
         color: product.color,
         fileSize: product.fileSize,
+        features: product.features,
+        faqs: product.faqs,
         createdAt: product.createdAt.toISOString(),
       }}
       creator={{
