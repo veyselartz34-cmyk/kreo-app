@@ -33,6 +33,7 @@ export default async function StorefrontPage({ params }: { params: Promise<{ use
           type: p.type,
           iconStr: p.icon
         }))} creatorName={defaultUser.name} username={defaultUser.username} bio={defaultUser.bio || ""} avatar={defaultUser.avatar} cover={defaultUser.cover}
+          themeColor={defaultUser.themeColor || "#1A1A1A"}
           announcement={defaultUser.announcement}
           featuredProductId={defaultUser.featuredProductId}
           socialInstagram={defaultUser.socialInstagram}
@@ -64,6 +65,7 @@ export default async function StorefrontPage({ params }: { params: Promise<{ use
       bio={creator.bio || ""}
       avatar={creator.avatar}
       cover={creator.cover}
+      themeColor={creator.themeColor || "#1A1A1A"}
       announcement={creator.announcement}
       featuredProductId={creator.featuredProductId}
       socialInstagram={creator.socialInstagram}
