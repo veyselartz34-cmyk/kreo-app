@@ -24,6 +24,16 @@ model User {
   
   // Vitrin (Storefront) ayarlari
   themeColor         String    @default("#1A1A1A")
+  announcement       String?   // Vitrin duyuru rozeti: "Yeni urun yayinda!" vb.
+  featuredProductId  String?   // Vitrinde one cikan urun ID'si
+  
+  // Sosyal Medya Linkleri
+  socialInstagram    String?
+  socialTwitter      String?
+  socialYoutube      String?
+  socialLinkedin     String?
+  socialTiktok       String?
+  socialWebsite      String?
   
   // Iyzico (Marketplace) bilgileri
   iyzicoApiKey       String?

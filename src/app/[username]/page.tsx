@@ -32,7 +32,16 @@ export default async function StorefrontPage({ params }: { params: Promise<{ use
           price: `₺${p.price}`,
           type: p.type,
           iconStr: p.icon
-        }))} creatorName={defaultUser.name} username={defaultUser.username} bio={defaultUser.bio || ""} avatar={defaultUser.avatar} cover={defaultUser.cover} />;
+        }))} creatorName={defaultUser.name} username={defaultUser.username} bio={defaultUser.bio || ""} avatar={defaultUser.avatar} cover={defaultUser.cover}
+          announcement={defaultUser.announcement}
+          featuredProductId={defaultUser.featuredProductId}
+          socialInstagram={defaultUser.socialInstagram}
+          socialTwitter={defaultUser.socialTwitter}
+          socialYoutube={defaultUser.socialYoutube}
+          socialLinkedin={defaultUser.socialLinkedin}
+          socialTiktok={defaultUser.socialTiktok}
+          socialWebsite={defaultUser.socialWebsite}
+        />;
       }
     }
     return notFound();
@@ -55,6 +64,14 @@ export default async function StorefrontPage({ params }: { params: Promise<{ use
       bio={creator.bio || ""}
       avatar={creator.avatar}
       cover={creator.cover}
+      announcement={creator.announcement}
+      featuredProductId={creator.featuredProductId}
+      socialInstagram={creator.socialInstagram}
+      socialTwitter={creator.socialTwitter}
+      socialYoutube={creator.socialYoutube}
+      socialLinkedin={creator.socialLinkedin}
+      socialTiktok={creator.socialTiktok}
+      socialWebsite={creator.socialWebsite}
     />
   );
 }
