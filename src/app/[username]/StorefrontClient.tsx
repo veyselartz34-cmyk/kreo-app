@@ -199,6 +199,7 @@ export default function CreatorStorefront({
         .animate-float { animation: float-slow 4s ease-in-out infinite; }
         @keyframes pulse-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.08); } }
         .animate-glow { animation: pulse-glow 3s ease-in-out infinite; }
+        @keyframes shimmer { 100% { transform: translateX(300%) skewX(-12deg); } }
       `}</style>
 
       {/* 1. ARKA PLAN DÖNEN 3D GALAKSİ / MESH KATMANI */}
@@ -460,14 +461,18 @@ export default function CreatorStorefront({
 
                 <Link
                   href={hasProducts ? `/${username}/${spotlightProduct.id}` : `/dashboard/products/new`}
-                  className="px-8 py-4 text-white text-base font-black rounded-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg"
+                  className="relative group/btn overflow-hidden px-8 py-4 rounded-2xl text-white text-base font-black flex items-center justify-center gap-3 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_10px_30px_rgba(211,47,47,0.35)] hover:shadow-[0_15px_40px_rgba(211,47,47,0.5)]"
                   style={{
-                    backgroundColor: activeColor,
-                    boxShadow: `0 8px 25px ${activeColor}40`
+                    background: `linear-gradient(135deg, ${activeColor} 0%, #B71C1C 50%, #1A1A1A 100%)`
                   }}
                 >
-                  {hasProducts ? "Hemen İncele & Satın Al" : "Kendi Ürününü Ekle"}
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  {/* Canlı Parlama (Shimmer) Işığı */}
+                  <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]" />
+                  
+                  <span className="relative z-10 flex items-center gap-2">
+                    {hasProducts ? "Hemen İncele & Satın Al" : "Kendi Ürününü Ekle"}
+                    <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                  </span>
                 </Link>
               </div>
             </div>
