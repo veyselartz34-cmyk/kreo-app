@@ -6,10 +6,11 @@ import {
   ArrowRight, Lock, ExternalLink, Calendar, Star, FileText, 
   Sparkles, CheckCircle2, ShieldCheck, Heart, Share2, Check, 
   Zap, Award, Play, BookOpen, Clock, Download, ChevronRight,
-  TrendingUp, MessageCircle, Layers, ArrowUpRight
+  TrendingUp, MessageCircle, Layers, ArrowUpRight, Compass, Flame
 } from "lucide-react";
 import { Playfair_Display } from "next/font/google";
 import { useState, useEffect } from "react";
+import MouseGlow from "@/components/MouseGlow";
 
 const playfair = Playfair_Display({ 
   subsets: ["latin"], 
@@ -25,6 +26,10 @@ type ProductProp = {
   type: string;
   iconStr?: string | null;
 };
+
+// Şık, karizmatik ve nötr tech/abstract profil görseli
+const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300";
+const NEUTRAL_AVATAR = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop"; // Karizmatik erkek portresi
 
 const formatUrl = (url?: string | null) => {
   if (!url) return "#";
@@ -69,7 +74,6 @@ export default function CreatorStorefront({
   const activeColor = themeColor || "#D32F2F";
   const [copiedLink, setCopiedLink] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [activeTab, setActiveTab] = useState<"all" | "products" | "consulting" | "about">("all");
 
   useEffect(() => {
     setIsClient(true);
@@ -83,9 +87,19 @@ export default function CreatorStorefront({
     }
   };
 
+  // İsim ayıklama: Son kelimeyi (örn: Kızılırmak) Playfair Italic & Gradient ile vurgulayacağız
+  const nameParts = (creatorName || "Nuh Veysel Kızılırmak").trim().split(" ");
+  const firstName = nameParts.slice(0, -1).join(" ") || nameParts[0];
+  const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+
+  // Güvenli profil görseli (belirtilen kadın görselini nötr erkek/profesyonel portre ile değiştiriyoruz)
+  const displayAvatar = avatar && !avatar.includes("53994a69daeb") 
+    ? avatar 
+    : NEUTRAL_AVATAR;
+
   const hasProducts = initialProducts.length > 0;
   
-  // Örnek dolgun zengin vitrin verisi (boş kalmaması için)
+  // Vitrin asla boş kalmasın, son derece lüks ve hareketli içerikler
   const products = hasProducts ? initialProducts : [
     {
       id: "prod-1",
@@ -93,7 +107,7 @@ export default function CreatorStorefront({
       description: "60 dakikalık canlı video görüşmesiyle içerik üretimi, gelir modelleri ve büyüme stratejinizi sıfırdan planlıyoruz.",
       price: "₺1.490",
       type: "Birebir Görüşme",
-      iconStr: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop"
+      iconStr: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop"
     },
     {
       id: "prod-2",
@@ -146,7 +160,7 @@ export default function CreatorStorefront({
       url: socialYoutube,
       icon: (
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path>
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path>
           <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
         </svg>
       )
@@ -172,13 +186,60 @@ export default function CreatorStorefront({
   return (
     <main className="min-h-screen bg-[#FDFBF7] text-[#1A1A1A] font-sans relative overflow-hidden selection:bg-[#D32F2F]/20 selection:text-[#D32F2F]">
       
-      {/* 1. ÜST SABİT FLOATING NAVBAR (Ana Sayfa Tarzı Lüks Cam Bar) */}
-      <header className="sticky top-0 left-0 right-0 z-50 bg-[#FDFBF7]/85 backdrop-blur-xl border-b border-black/5 transition-all">
+      {/* 0. İNTERAKTİF MOUSE TAKİP EDEN PARILTILI IŞIK (Ana Sayfa Efekti) */}
+      <MouseGlow />
+
+      {/* CSS Keyframe Animasyonları */}
+      <style>{`
+        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .animate-spin-slow { animation: spin-slow 70s linear infinite; }
+        @keyframes spin-slow-reverse { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        .animate-spin-slow-reverse { animation: spin-slow-reverse 60s linear infinite; }
+        @keyframes float-slow { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        .animate-float { animation: float-slow 4s ease-in-out infinite; }
+        @keyframes pulse-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.08); } }
+        .animate-glow { animation: pulse-glow 3s ease-in-out infinite; }
+      `}</style>
+
+      {/* 1. ARKA PLAN DÖNEN 3D GALAKSİ / MESH KATMANI */}
+      {isClient && (
+        <div 
+          className="absolute inset-0 w-full h-[1100px] pointer-events-none -z-10 overflow-hidden" 
+          style={{ 
+            perspective: "1200px", 
+            transform: "perspective(1200px) rotateX(15deg)", 
+            transformOrigin: "center top",
+            WebkitMaskImage: "radial-gradient(circle at 50% 15%, black 20%, transparent 75%)",
+            maskImage: "radial-gradient(circle at 50% 15%, black 20%, transparent 75%)"
+          }}
+        >
+          <div className="absolute inset-0 animate-spin-slow">
+            <div className="absolute top-[25%] left-1/2" style={{ width: "1800px", height: "1800px", transform: "translate(-50%, -50%) rotate(279deg)", zIndex: 0 }}>
+              <img src="https://cdn.21st.dev/assets/mirror/c6/c66b4f0c389b961a3676312892ca1387d7f8bd1973f44a33c7d47840d297633f.png" alt="" className="w-full h-full object-cover opacity-40" />
+            </div>
+          </div>
+          <div className="absolute inset-0 animate-spin-slow-reverse">
+            <div className="absolute top-[25%] left-1/2" style={{ width: "1100px", height: "1100px", transform: "translate(-50%, -50%) rotate(304deg)", zIndex: 1 }}>
+              <img src="https://cdn.21st.dev/assets/mirror/75/75f75d84f07a61893dc2a16aad0c781c32b9e758c8f0adda2a8b252c431fdd82.png" alt="" className="w-full h-full object-cover opacity-50" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. DİNAMİK AMBIENT IŞIK HAVUZU */}
+      <div 
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] blur-[150px] rounded-full pointer-events-none -z-20 opacity-80"
+        style={{
+          background: `radial-gradient(circle at 50% 20%, ${activeColor}30 0%, rgba(245, 124, 0, 0.12) 45%, transparent 75%)`
+        }}
+      />
+
+      {/* 3. ÜST SABİT FLOATING GLASS NAVBAR */}
+      <header className="sticky top-0 left-0 right-0 z-50 bg-[#FDFBF7]/80 backdrop-blur-xl border-b border-black/5 transition-all">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Logo & Mağaza Sahibi */}
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-6 h-6 rounded-full bg-[#1A1A1A] flex items-center justify-center text-white text-[10px] font-black group-hover:scale-105 transition-transform">
+              <div className="w-7 h-7 rounded-full bg-[#1A1A1A] flex items-center justify-center text-white text-xs font-black group-hover:scale-105 transition-transform shadow-xs">
                 K
               </div>
               <span className="text-sm font-black tracking-tight text-[#1A1A1A]">
@@ -186,94 +247,91 @@ export default function CreatorStorefront({
               </span>
             </Link>
             <span className="text-zinc-300">/</span>
-            <span className="text-xs font-bold text-zinc-500 hover:text-[#1A1A1A] transition-colors">
+            <span className="text-xs font-bold text-zinc-500">
               {username}
             </span>
           </div>
 
-          {/* Aksiyon Butonları */}
           <div className="flex items-center gap-3">
             <button
               onClick={handleShare}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-black/5 hover:border-black/15 text-xs font-bold text-[#1A1A1A] rounded-full shadow-xs hover:shadow-sm transition-all"
+              className="flex items-center gap-1.5 px-4 py-2 bg-white border border-black/10 hover:border-black/20 text-xs font-bold text-[#1A1A1A] rounded-full shadow-xs hover:shadow-md transition-all hover:scale-105 active:scale-95"
             >
-              {copiedLink ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Share2 className="w-3.5 h-3.5 text-zinc-500" />}
-              <span>{copiedLink ? "Kopyalandı!" : "Paylaş"}</span>
+              {copiedLink ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Share2 className="w-3.5 h-3.5 text-zinc-600" />}
+              <span>{copiedLink ? "Kopyalandı!" : "Profili Paylaş"}</span>
             </button>
 
             <a
-              href="#urunler"
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 text-white text-xs font-black rounded-full shadow-md hover:scale-105 transition-all"
+              href="#katalog"
+              className="hidden sm:inline-flex items-center gap-1.5 px-5 py-2 text-white text-xs font-black rounded-full shadow-md hover:scale-105 transition-all"
               style={{ backgroundColor: activeColor }}
             >
-              İçerikleri İncele
+              İçerikleri Keşfet
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>
       </header>
 
-      {/* 2. ARKA PLAN AMBİYANS IŞIĞI & GALAKSİ PARÇACIKLARI */}
-      <div 
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[700px] blur-[150px] rounded-full pointer-events-none -z-10 opacity-70"
-        style={{
-          background: `radial-gradient(circle at 50% 25%, ${activeColor}25 0%, rgba(245, 124, 0, 0.08) 45%, transparent 75%)`
-        }}
-      />
-
-      {/* 3. HERO SECTION (Büyük Hibrit Başlık + Yüksek Etkileşimli Profil) */}
+      {/* 4. HERO SECTION (Büyük Hibrit Başlık + Efektli Profil) */}
       <section className="relative pt-12 pb-20 px-6 max-w-5xl mx-auto text-center">
         
-        {/* Shiny Pill Badge (Ana Sayfa Stili) */}
+        {/* Parıldayan Shiny Pill Rozet */}
         <motion.div
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="mb-8 flex justify-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-black/10 bg-white/80 backdrop-blur-md shadow-[0_2px_15px_rgba(0,0,0,0.03)]">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-black/10 bg-white/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.04)] animate-float">
             <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" />
-            <span className="text-xs font-black text-[#1A1A1A] tracking-wide">
-              {announcement || "Onaylı Resmi Dijital Vitrin"}
+            <span className="text-xs font-black text-[#1A1A1A] tracking-wider uppercase">
+              {announcement || "Onaylı İçerik Üreticisi Vitrini"}
             </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
           </div>
         </motion.div>
 
-        {/* Avatar & Doğrulanmış Rozet */}
-        <div className="relative inline-block mb-6">
+        {/* Profil Fotoğrafı - Hareketli Halo Işık Efekti */}
+        <div className="relative inline-block mb-8">
           <div 
-            className="absolute inset-0 rounded-full blur-2xl opacity-50 animate-pulse"
+            className="absolute inset-0 rounded-full blur-2xl opacity-70 animate-glow"
             style={{ backgroundColor: activeColor }}
           />
-          <div className="w-28 h-28 md:w-36 md:h-36 rounded-full border-4 border-white shadow-2xl overflow-hidden bg-white relative mx-auto">
+          <motion.div 
+            whileHover={{ scale: 1.05, rotate: 1 }}
+            className="w-32 h-32 md:w-40 md:h-40 rounded-full border-[5px] border-white shadow-[0_15px_50px_rgba(0,0,0,0.18)] overflow-hidden bg-white relative mx-auto cursor-pointer"
+          >
             <img 
-              src={avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300"} 
+              src={displayAvatar} 
               alt={creatorName} 
               className="w-full h-full object-cover" 
             />
-          </div>
+          </motion.div>
           <div 
-            className="absolute bottom-1 right-1 p-1.5 rounded-full text-white shadow-md border-2 border-white"
+            className="absolute bottom-1 right-1 p-2 rounded-full text-white shadow-xl border-2 border-white"
             style={{ backgroundColor: activeColor }}
-            title="Doğrulanmış Üretici"
+            title="Doğrulanmış Üretici Rozeti"
           >
             <CheckCircle2 className="w-4 h-4" />
           </div>
         </div>
 
-        {/* Massive Headline with Hybrid Italic Typography (Ana Sayfa İle Birebir) */}
+        {/* BÜYÜK HİBRİT BAŞLIK (İsmin son kelimesi Playfair Italic & Gradient) */}
         <motion.h1
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-[#1A1A1A] leading-[1.1] max-w-4xl mx-auto"
         >
-          {creatorName}{" "}
-          <span 
-            className={`${playfair.className} text-transparent bg-clip-text bg-gradient-to-r from-[#D32F2F] via-[#F57C00] to-[#FBC02D] drop-shadow-[0_0_20px_rgba(211,47,47,0.4)] px-1`}
-          >
-            Vitrini
-          </span>
+          {firstName}{" "}
+          {lastName && (
+            <span 
+              className={`${playfair.className} text-transparent bg-clip-text bg-gradient-to-r from-[#D32F2F] via-[#F57C00] to-[#FBC02D] drop-shadow-[0_0_25px_rgba(211,47,47,0.5)] px-1`}
+            >
+              {lastName}
+            </span>
+          )}
         </motion.h1>
 
         {/* Biyografi */}
@@ -283,7 +341,7 @@ export default function CreatorStorefront({
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-6 text-base md:text-xl text-zinc-600 max-w-2xl mx-auto leading-relaxed font-medium"
         >
-          {bio || "Geliştirdiğim eğitim serileri, danışmanlık saatlerim ve özel şablonlarıma buradan anında erişebilirsiniz."}
+          {bio || "Geliştirdiğim dijital rehberler, özel şablonlar ve 1-e-1 strateji seanslarıma buradan anında erişebilirsiniz."}
         </motion.p>
 
         {/* Sosyal Medya İkonları */}
@@ -292,7 +350,7 @@ export default function CreatorStorefront({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="mt-8 flex items-center justify-center flex-wrap gap-2.5"
+            className="mt-8 flex items-center justify-center flex-wrap gap-3"
           >
             {socialLinks.map((s, idx) => (
               <a
@@ -301,7 +359,7 @@ export default function CreatorStorefront({
                 target="_blank"
                 rel="noreferrer"
                 title={s.name}
-                className="w-10 h-10 rounded-2xl bg-white border border-black/5 flex items-center justify-center text-zinc-600 hover:text-[#1A1A1A] hover:border-black/20 hover:scale-110 shadow-xs transition-all"
+                className="w-11 h-11 rounded-2xl bg-white border border-black/5 flex items-center justify-center text-zinc-600 hover:text-[#1A1A1A] hover:border-black/20 hover:scale-110 shadow-xs hover:shadow-md transition-all"
               >
                 {s.icon}
               </a>
@@ -309,53 +367,59 @@ export default function CreatorStorefront({
           </motion.div>
         )}
 
-        {/* Hızlı Güven İstatistikleri */}
-        <div className="mt-12 inline-flex items-center gap-6 px-6 py-3 bg-white/70 backdrop-blur-md rounded-2xl border border-black/5 shadow-xs">
+        {/* 3'lü Hızlı Rozet Bandı */}
+        <div className="mt-12 inline-flex items-center gap-6 px-7 py-3 bg-white/80 backdrop-blur-md rounded-full border border-black/5 shadow-xs">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-green-600" />
-            <span className="text-xs font-bold text-zinc-700">Doğrulanmış Satıcı</span>
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span className="text-xs font-black text-zinc-700">Onaylı Satıcı</span>
           </div>
           <div className="w-1 h-1 bg-zinc-300 rounded-full" />
           <div className="flex items-center gap-2">
             <Zap className="w-4 h-4 text-amber-500 fill-current" />
-            <span className="text-xs font-bold text-zinc-700">Anında Dijital Teslimat</span>
+            <span className="text-xs font-black text-zinc-700">Anında Teslimat</span>
           </div>
           <div className="w-1 h-1 bg-zinc-300 rounded-full" />
           <div className="flex items-center gap-2">
             <Star className="w-4 h-4 text-rose-500 fill-current" />
-            <span className="text-xs font-bold text-zinc-700">256-Bit iyzico Güvencesi</span>
+            <span className="text-xs font-black text-zinc-700">256-Bit iyzico Koruması</span>
           </div>
         </div>
       </section>
 
-      {/* 4. ÖNE ÇIKAN BENTO SPOTLIGHT KART (Ana Sayfa Bento Izgara Stili) */}
-      <section id="urunler" className="max-w-5xl mx-auto px-6 mb-20">
-        <div className="text-left mb-6">
-          <span className="text-xs font-black tracking-widest text-[#D32F2F] uppercase">
-            ÖNE ÇIKAN FIRSAT
-          </span>
-          <h2 className="text-2xl md:text-3xl font-black text-[#1A1A1A] tracking-tight mt-1">
-            En Çok Tercih Edilen Seans & İçerik
-          </h2>
+      {/* 5. ÖNE ÇIKAN BENTO SPOTLIGHT KART (Hareketli Canlı Efektler) */}
+      <section className="max-w-5xl mx-auto px-6 mb-20">
+        <div className="text-left mb-6 flex items-center justify-between">
+          <div>
+            <span className="text-xs font-black tracking-widest text-[#D32F2F] uppercase flex items-center gap-1.5">
+              <Flame className="w-3.5 h-3.5 fill-current" /> ÖNE ÇIKAN FIRSAT
+            </span>
+            <h2 className="text-2xl md:text-3xl font-black text-[#1A1A1A] tracking-tight mt-1">
+              En Çok Tercih Edilen Seans & İçerik
+            </h2>
+          </div>
         </div>
 
-        <div className="relative group bg-white border border-black/10 rounded-[2.5rem] p-3 shadow-[0_10px_40px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 overflow-hidden">
-          {/* Spotlight Arka Plan Efekti */}
+        <motion.div 
+          whileHover={{ y: -6 }}
+          transition={{ duration: 0.3 }}
+          className="relative group bg-white border border-black/10 rounded-[2.5rem] p-3 shadow-[0_12px_45px_rgba(0,0,0,0.06)] hover:shadow-[0_25px_65px_rgba(0,0,0,0.12)] transition-all duration-500 overflow-hidden"
+        >
+          {/* Spotlight Canlı Renkli Arka Plan Efekti */}
           <div 
-            className="absolute top-0 right-0 w-96 h-96 blur-3xl opacity-20 pointer-events-none rounded-full"
+            className="absolute top-0 right-0 w-96 h-96 blur-3xl opacity-20 group-hover:opacity-35 pointer-events-none rounded-full transition-opacity duration-700"
             style={{ backgroundColor: activeColor }}
           />
 
           <div className="p-8 md:p-12 flex flex-col lg:flex-row items-center gap-8 md:gap-12 relative z-10">
-            {/* Görsel / Medya Alanı */}
+            {/* Görsel Alanı */}
             <div className="w-full lg:w-5/12 aspect-[4/3] rounded-3xl overflow-hidden border border-black/5 bg-zinc-100 relative group-hover:scale-[1.02] transition-transform duration-500">
               <img 
-                src={spotlightProduct.iconStr || "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop"} 
+                src={spotlightProduct.iconStr || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop"} 
                 alt={spotlightProduct.title} 
                 className="w-full h-full object-cover" 
               />
-              <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 bg-black/80 backdrop-blur-md rounded-full text-white text-[11px] font-black uppercase tracking-wider">
-                <Star className="w-3 h-3 text-amber-400 fill-current" />
+              <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-black/85 backdrop-blur-md rounded-full text-white text-xs font-black uppercase tracking-wider shadow-md">
+                <Star className="w-3.5 h-3.5 text-amber-400 fill-current animate-spin-slow" />
                 Spotlight
               </div>
             </div>
@@ -364,7 +428,7 @@ export default function CreatorStorefront({
             <div className="w-full lg:w-7/12 flex flex-col justify-center text-left">
               <div className="flex items-center gap-2 mb-3">
                 <span 
-                  className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border"
+                  className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider border shadow-2xs"
                   style={{ 
                     backgroundColor: `${activeColor}15`, 
                     color: activeColor, 
@@ -374,7 +438,7 @@ export default function CreatorStorefront({
                   {spotlightProduct.type}
                 </span>
                 <span className="text-xs font-bold text-zinc-500 flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" /> Kontenjan Sınırlı
+                  <Clock className="w-3.5 h-3.5" /> Sınırlı Kontenjan
                 </span>
               </div>
 
@@ -402,17 +466,17 @@ export default function CreatorStorefront({
                     boxShadow: `0 8px 25px ${activeColor}40`
                   }}
                 >
-                  {hasProducts ? "Hemen Başla & Satın Al" : "Kendi Ürününü Ekle"}
-                  <ArrowRight className="w-5 h-5" />
+                  {hasProducts ? "Hemen İncele & Satın Al" : "Kendi Ürününü Ekle"}
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* 5. TÜM KATALOG & DİJİTAL ÜRÜNLER (Bento Kart Izgarası) */}
-      <section className="max-w-5xl mx-auto px-6 mb-24">
+      {/* 6. TÜM DİJİTAL İÇERİKLER (Lüks 2 Sütunlu Kartlar) */}
+      <section id="katalog" className="max-w-5xl mx-auto px-6 mb-24">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4 text-left">
           <div>
             <span className="text-xs font-black tracking-widest text-zinc-400 uppercase">
@@ -422,7 +486,7 @@ export default function CreatorStorefront({
               Kütüphane & Dijital Ürünler
             </h2>
           </div>
-          <p className="text-xs font-bold text-zinc-600 bg-white px-4 py-2 rounded-xl border border-black/5 shadow-xs">
+          <p className="text-xs font-black text-zinc-600 bg-white px-4 py-2 rounded-xl border border-black/5 shadow-xs">
             {otherProducts.length + 1} İçerik Mevcut
           </p>
         </div>
@@ -434,7 +498,11 @@ export default function CreatorStorefront({
               href={hasProducts ? `/${username}/${p.id}` : `/dashboard/products/new`}
               className="group block"
             >
-              <div className="bg-white border border-black/5 hover:border-black/15 rounded-[2.25rem] p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.08)] transition-all duration-400 flex flex-col h-full overflow-hidden">
+              <motion.div 
+                whileHover={{ y: -6 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white border border-black/5 hover:border-black/15 rounded-[2.25rem] p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.08)] transition-all duration-400 flex flex-col h-full overflow-hidden"
+              >
                 {/* Kart Görseli */}
                 <div className="w-full aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-zinc-100 border border-black/5 relative">
                   <img 
@@ -455,7 +523,7 @@ export default function CreatorStorefront({
                   {p.description}
                 </p>
 
-                {/* Alt Kısım: Fiyat & Ok */}
+                {/* Alt Kısım: Fiyat & Ok Butonu */}
                 <div className="mt-auto flex items-center justify-between pt-5 border-t border-black/5">
                   <div>
                     <span className="text-[10px] font-bold text-zinc-400 block uppercase">FİYAT</span>
@@ -465,19 +533,19 @@ export default function CreatorStorefront({
                   </div>
 
                   <div 
-                    className="w-11 h-11 rounded-xl flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform"
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-sm group-hover:scale-105 group-hover:rotate-45 transition-all"
                     style={{ backgroundColor: activeColor }}
                   >
                     <ArrowUpRight className="w-5 h-5" />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* 6. GÜVEN VE DESTEK ALANI (Ana Sayfa Kalitesinde Garanti Bandı) */}
+      {/* 7. GÜVEN VE DESTEK ALANI (Lüks Garanti Mimarisi) */}
       <section className="max-w-5xl mx-auto px-6 mb-20">
         <div className="bg-white rounded-3xl border border-black/5 p-8 md:p-12 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
           <div className="flex gap-4 items-start">
@@ -499,7 +567,7 @@ export default function CreatorStorefront({
             <div>
               <h4 className="text-base font-black text-[#1A1A1A]">Anında Teslimat</h4>
               <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
-                Satın alma işlemi bittiği anda indirme bağlantısı ve erişim bilgileri hem ekranda hem mailinizdedir.
+                Satın alma bittiği anda dijital dosya veya takvim randevusu ekranınıza anında yansır.
               </p>
             </div>
           </div>
@@ -511,14 +579,14 @@ export default function CreatorStorefront({
             <div>
               <h4 className="text-base font-black text-[#1A1A1A]">Doğrudan Üretici Desteği</h4>
               <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
-                Aracı komisyonlar olmadan ödemeniz doğrudan {creatorName} üreticisine ulaşır.
+                Ödemeniz doğrudan bağımsız içerik üreticisine aktarılır ve tam destek sağlanır.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 7. KREO POWERED FOOTER */}
+      {/* 8. KREO POWERED FOOTER */}
       <footer className="text-center pt-8 border-t border-black/5 max-w-5xl mx-auto px-6">
         <Link 
           href="/" 
