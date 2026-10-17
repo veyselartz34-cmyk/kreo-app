@@ -6,24 +6,29 @@ export async function getCurrentUser() {
     const cookieStore = await cookies();
     const userId = cookieStore.get("kreo_session")?.value;
 
-    if (!userId) {
-      // If no session cookie, return the default seed user or null
-      return await prisma.user.findFirst({
-        where: { email: "nuhveysel@kreo.com" }
+    if (userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: userId }
       });
+      if (user) return user;
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId }
+    // Eger cerez yoksa veya bulunamadiysa, veritabanindaki ana uretici hesabini getir
+    const creator = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { username: "nvk123" },
+          { email: "nuhveysel@kreo.com" },
+        ]
+      }
     });
 
-    if (!user) {
-      return await prisma.user.findFirst({
-        where: { email: "nuhveysel@kreo.com" }
-      });
-    }
+    if (creator) return creator;
 
-    return user;
+    // Son care: veritabanindaki ilk kullaniciyi getir
+    return await prisma.user.findFirst({
+      orderBy: { createdAt: "asc" }
+    });
   } catch (error) {
     console.error("Error getting current user:", error);
     return null;

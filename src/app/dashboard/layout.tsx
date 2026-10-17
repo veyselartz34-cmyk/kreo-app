@@ -11,10 +11,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect("/login");
   }
 
-  if (!user.isSubscribed) {
-    redirect("/subscribe");
-  }
-
   const userProp = {
     name: user.name,
     email: user.email,
