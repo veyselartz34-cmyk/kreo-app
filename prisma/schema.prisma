@@ -40,6 +40,16 @@ model User {
   iyzicoSecretKey    String?
   iban               String?
   
+  // Entegrasyonlar
+  googleAnalyticsId  String?   // G-XXXXXXXXXX
+  metaPixelId        String?   // Pixel ID
+  googleCalendarEmail String?  // Google Takvim baglantisi
+  discordWebhookUrl  String?   // Discord bildirim/rol kanali
+  mailchimpApiKey    String?   // Mailchimp API anahtari
+  mailchimpListId    String?   // Mailchimp Liste ID
+  customWebhookUrl   String?   // Ozel Webhook (Zapier/Make/Sunucu)
+  webhookSecret      String?   // Webhook guvenlik anahtari
+  
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 

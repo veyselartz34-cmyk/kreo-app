@@ -58,22 +58,57 @@ export default async function StorefrontPage({ params }: { params: Promise<{ use
   }));
 
   return (
-    <StorefrontClient 
-      initialProducts={formattedProducts} 
-      creatorName={creator.name}
-      username={creator.username}
-      bio={creator.bio || ""}
-      avatar={creator.avatar}
-      cover={creator.cover}
-      themeColor={creator.themeColor || "#1A1A1A"}
-      announcement={creator.announcement}
-      featuredProductId={creator.featuredProductId}
-      socialInstagram={creator.socialInstagram}
-      socialTwitter={creator.socialTwitter}
-      socialYoutube={creator.socialYoutube}
-      socialLinkedin={creator.socialLinkedin}
-      socialTiktok={creator.socialTiktok}
-      socialWebsite={creator.socialWebsite}
-    />
+    <>
+      {creator.googleAnalyticsId && (
+        <>
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${creator.googleAnalyticsId}`} />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${creator.googleAnalyticsId}');
+              `,
+            }}
+          />
+        </>
+      )}
+      {creator.metaPixelId && (
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${creator.metaPixelId}');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
+      )}
+      <StorefrontClient 
+        initialProducts={formattedProducts} 
+        creatorName={creator.name}
+        username={creator.username}
+        bio={creator.bio || ""}
+        avatar={creator.avatar}
+        cover={creator.cover}
+        themeColor={creator.themeColor || "#1A1A1A"}
+        announcement={creator.announcement}
+        featuredProductId={creator.featuredProductId}
+        socialInstagram={creator.socialInstagram}
+        socialTwitter={creator.socialTwitter}
+        socialYoutube={creator.socialYoutube}
+        socialLinkedin={creator.socialLinkedin}
+        socialTiktok={creator.socialTiktok}
+        socialWebsite={creator.socialWebsite}
+      />
+    </>
   );
 }
