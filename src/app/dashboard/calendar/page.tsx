@@ -16,17 +16,27 @@ export default async function CalendarPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { workingHours: true },
+  });
+
   const meetings = dbMeetings.map(m => ({
     id: m.id,
     title: m.title,
     client: m.clientName,
     email: m.clientEmail,
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop",
+    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(m.clientName)}&background=random`,
     date: m.date,
     time: m.time,
-    link: "https://meet.google.com/xyz-uvwx-yz",
+    link: m.link || "https://meet.google.com/new",
     status: m.status,
   }));
 
-  return <CalendarClient initialMeetings={meetings} />;
+  return (
+    <CalendarClient 
+      initialMeetings={meetings} 
+      initialWorkingHours={dbUser?.workingHours ? JSON.parse(dbUser.workingHours) : null} 
+    />
+  );
 }
