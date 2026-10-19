@@ -461,17 +461,14 @@ export default function CreatorStorefront({
 
                 <Link
                   href={hasProducts ? `/${username}/${spotlightProduct.id}` : `/dashboard/products/new`}
-                  className="relative group/btn overflow-hidden px-8 py-4 rounded-2xl text-white text-base font-black flex items-center justify-center gap-3 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_10px_30px_rgba(211,47,47,0.35)] hover:shadow-[0_15px_40px_rgba(211,47,47,0.5)]"
-                  style={{
-                    background: `linear-gradient(135deg, ${activeColor} 0%, #B71C1C 50%, #1A1A1A 100%)`
-                  }}
+                  className="relative group/btn overflow-hidden px-8 py-3.5 rounded-full text-white text-sm md:text-base font-bold flex items-center justify-center gap-2.5 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_4px_25px_rgba(211,47,47,0.45)] hover:shadow-[0_8px_35px_rgba(211,47,47,0.6)] bg-[#D32F2F] hover:bg-[#B71C1C]"
                 >
                   {/* Canlı Parlama (Shimmer) Işığı */}
-                  <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]" />
+                  <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]" />
                   
                   <span className="relative z-10 flex items-center gap-2">
                     {hasProducts ? "Hemen İncele & Satın Al" : "Kendi Ürününü Ekle"}
-                    <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </span>
                 </Link>
               </div>
