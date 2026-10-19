@@ -461,7 +461,7 @@ export default function CreatorStorefront({
 
                 <Link
                   href={hasProducts ? `/${username}/${spotlightProduct.id}` : `/dashboard/products/new`}
-                  className="relative group/btn overflow-hidden px-8 py-3.5 rounded-full text-white text-sm md:text-base font-bold flex items-center justify-center gap-2.5 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_4px_25px_rgba(211,47,47,0.45)] hover:shadow-[0_8px_35px_rgba(211,47,47,0.6)] bg-[#D32F2F] hover:bg-[#B71C1C]"
+                  className="relative group/btn overflow-hidden px-8 py-3.5 rounded-full text-white text-sm md:text-base font-bold flex items-center justify-center gap-2.5 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_4px_25px_rgba(245,124,0,0.35)] hover:shadow-[0_8px_35px_rgba(245,124,0,0.5)] bg-gradient-to-r from-[#D32F2F] via-[#F57C00] to-[#E65100]"
                 >
                   {/* Canlı Parlama (Shimmer) Işığı */}
                   <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]" />
