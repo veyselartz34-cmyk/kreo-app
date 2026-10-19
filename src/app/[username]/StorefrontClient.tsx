@@ -227,14 +227,6 @@ export default function CreatorStorefront({
         </div>
       )}
 
-      {/* 2. DİNAMİK AMBIENT IŞIK HAVUZU */}
-      <div 
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] blur-[150px] rounded-full pointer-events-none -z-20 opacity-80"
-        style={{
-          background: `radial-gradient(circle at 50% 20%, ${activeColor}30 0%, rgba(245, 124, 0, 0.12) 45%, transparent 75%)`
-        }}
-      />
-
       {/* 3. ÜST SABİT FLOATING GLASS NAVBAR */}
       <header className="sticky top-0 left-0 right-0 z-50 bg-[#FDFBF7]/80 backdrop-blur-xl border-b border-black/5 transition-all">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -293,15 +285,11 @@ export default function CreatorStorefront({
           </div>
         </motion.div>
 
-        {/* Profil Fotoğrafı - Hareketli Halo Işık Efekti */}
+        {/* Profil Fotoğrafı - Temiz & Net */}
         <div className="relative inline-block mb-8">
-          <div 
-            className="absolute inset-0 rounded-full blur-2xl opacity-70 animate-glow"
-            style={{ backgroundColor: activeColor }}
-          />
           <motion.div 
             whileHover={{ scale: 1.05, rotate: 1 }}
-            className="w-32 h-32 md:w-40 md:h-40 rounded-full border-[5px] border-white shadow-[0_15px_50px_rgba(0,0,0,0.18)] overflow-hidden bg-white relative mx-auto cursor-pointer"
+            className="w-32 h-32 md:w-40 md:h-40 rounded-full border-[5px] border-white shadow-[0_15px_40px_rgba(0,0,0,0.12)] overflow-hidden bg-white relative mx-auto cursor-pointer"
           >
             <img 
               src={displayAvatar} 
