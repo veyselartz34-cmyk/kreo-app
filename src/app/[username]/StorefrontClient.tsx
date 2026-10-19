@@ -401,16 +401,10 @@ export default function CreatorStorefront({
         </div>
 
         <motion.div 
-          whileHover={{ y: -6 }}
+          whileHover={{ y: -4 }}
           transition={{ duration: 0.3 }}
-          className="relative group bg-white border border-black/10 rounded-[2.5rem] p-3 shadow-[0_12px_45px_rgba(0,0,0,0.06)] hover:shadow-[0_25px_65px_rgba(0,0,0,0.12)] transition-all duration-500 overflow-hidden"
+          className="relative bg-white border border-black/[0.08] rounded-[2.5rem] p-3 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.07)] hover:border-black/15 transition-all duration-500 overflow-hidden"
         >
-          {/* Spotlight Canlı Renkli Arka Plan Efekti */}
-          <div 
-            className="absolute top-0 right-0 w-96 h-96 blur-3xl opacity-20 group-hover:opacity-35 pointer-events-none rounded-full transition-opacity duration-700"
-            style={{ backgroundColor: activeColor }}
-          />
-
           <div className="p-8 md:p-12 flex flex-col lg:flex-row items-center gap-8 md:gap-12 relative z-10">
             {/* Görsel Alanı */}
             <div className="w-full lg:w-5/12 aspect-[4/3] rounded-3xl overflow-hidden border border-black/5 bg-zinc-100 relative group-hover:scale-[1.02] transition-transform duration-500">
