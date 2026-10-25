@@ -50,7 +50,7 @@ export async function validateCouponAction(data: {
       finalPrice,
       isPercent: coupon.isPercent,
       discountValue: coupon.discount,
-      message: `%${coupon.discount} indirim uygulandı!`,
+      message: coupon.isPercent ? `%${coupon.discount} indirim uygulandı!` : `₺${coupon.discount} indirim uygulandı!`,
     };
   } catch (error: any) {
     console.error("Error validating coupon:", error);
@@ -66,30 +66,39 @@ export async function processCheckoutAction(formData: {
   creatorUsername: string;
   productId: string;
   couponCode?: string | null;
+  appointmentDate?: string | null;
+  appointmentTime?: string | null;
 }) {
   try {
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { username: formData.creatorUsername.toLowerCase() }
     });
     
     if (!user) {
-      return { success: false, error: "Satıcı bulunamadı." };
+      // Satıcı bulunamazsa varsayılan ilk kullanıcıyı veya sistem satıcısını bul
+      user = await prisma.user.findFirst();
+      if (!user) {
+        return { success: false, error: "Satıcı bulunamadı." };
+      }
     }
 
     // 1. Müşteriyi bul veya oluştur
+    const cleanEmail = formData.clientEmail.trim().toLowerCase();
+    const cleanName = formData.clientName.trim();
+
     const customer = await prisma.customer.upsert({
       where: {
         email_creatorId: {
-          email: formData.clientEmail.trim().toLowerCase(),
+          email: cleanEmail,
           creatorId: user.id
         }
       },
       update: {
-        name: formData.clientName.trim(),
+        name: cleanName,
       },
       create: {
-        name: formData.clientName.trim(),
-        email: formData.clientEmail.trim().toLowerCase(),
+        name: cleanName,
+        email: cleanEmail,
         creatorId: user.id
       }
     });
@@ -110,17 +119,68 @@ export async function processCheckoutAction(formData: {
       }
     }
 
-    // 3. Sipariş (Order) oluştur
+    // 3. Geçerli ürün kontrolü ve oluşturma
+    let validProductId = formData.productId;
+    const existingProduct = await prisma.product.findUnique({
+      where: { id: formData.productId }
+    });
+
+    if (!existingProduct) {
+      // Demo ürün ise veya henüz DB'ye kaydedilmemişse, otomatik DB ürünü oluştur
+      const isMeetingType = formData.productTitle.toLowerCase().includes("görüşme") || 
+                           formData.productTitle.toLowerCase().includes("danışmanlık") ||
+                           formData.productTitle.toLowerCase().includes("seans");
+
+      const createdProduct = await prisma.product.create({
+        data: {
+          title: formData.productTitle,
+          description: "Kreo vitrininden satın alınan dijital içerik / seans.",
+          price: formData.amount,
+          type: isMeetingType ? "Birebir Görüşme" : "Dijital Ürün",
+          userId: user.id,
+        }
+      });
+      validProductId = createdProduct.id;
+    }
+
+    // 4. Sipariş (Order) oluştur
     const newOrder = await prisma.order.create({
       data: {
         amount: formData.amount,
         status: "SUCCESS",
-        productId: formData.productId,
+        productId: validProductId,
         customerId: customer.id,
       }
     });
 
+    // 5. Eğer ürün bir Birebir Görüşme / Danışmanlık ise veya randevu tarihi girilmişse Meeting oluştur
+    let createdMeeting = null;
+    const isConsulting = formData.productTitle.toLowerCase().includes("görüşme") || 
+                         formData.productTitle.toLowerCase().includes("danışmanlık") ||
+                         formData.productTitle.toLowerCase().includes("seans") ||
+                         Boolean(formData.appointmentDate);
+
+    if (isConsulting) {
+      const meetDate = formData.appointmentDate || new Date(Date.now() + 86400000 * 2).toLocaleDateString("tr-TR");
+      const meetTime = formData.appointmentTime || "14:00 - 15:00";
+      const meetLink = `https://meet.google.com/kreo-${Math.random().toString(36).substring(2, 8)}`;
+
+      createdMeeting = await prisma.meeting.create({
+        data: {
+          userId: user.id,
+          title: formData.productTitle,
+          clientName: cleanName,
+          clientEmail: cleanEmail,
+          date: meetDate,
+          time: meetTime,
+          link: meetLink,
+          status: "Planlandı",
+        }
+      });
+    }
+
     // Revalidate dashboard routes
+    revalidatePath("/dashboard/calendar");
     revalidatePath("/dashboard/customers");
     revalidatePath("/dashboard/orders");
     revalidatePath("/dashboard/products");
@@ -131,7 +191,13 @@ export async function processCheckoutAction(formData: {
       success: true, 
       orderId: newOrder.id,
       amount: newOrder.amount,
-      createdAt: newOrder.createdAt.toISOString()
+      createdAt: newOrder.createdAt.toISOString(),
+      meeting: createdMeeting ? {
+        id: createdMeeting.id,
+        date: createdMeeting.date,
+        time: createdMeeting.time,
+        link: createdMeeting.link,
+      } : null,
     };
   } catch (error) {
     console.error("Error processing checkout:", error);

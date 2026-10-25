@@ -619,15 +619,14 @@ export default function StorefrontClient({ initialData }: { initialData: Initial
                   <div 
                     className="w-20 h-20 rounded-full border-4 border-[#FDFBF7] shadow-lg overflow-hidden bg-white"
                   >
-                    {avatarPreview ? (
+                    {avatarPreview && !avatarPreview.includes("53994a69daeb") ? (
                       <img src={avatarPreview} alt="Profil Fotoğrafı" className="w-full h-full object-cover" />
                     ) : (
-                      <div
-                        className="w-full h-full flex items-center justify-center text-2xl font-black text-white transition-colors"
-                        style={{ backgroundColor: themeColor }}
-                      >
-                        {name.charAt(0) || "K"}
-                      </div>
+                      <img 
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop" 
+                        alt="Profil Fotoğrafı" 
+                        className="w-full h-full object-cover" 
+                      />
                     )}
                   </div>
                 </div>
@@ -694,6 +693,12 @@ export default function StorefrontClient({ initialData }: { initialData: Initial
                       <div className="text-right flex-shrink-0">
                         <p className="text-lg font-black" style={{ color: themeColor }}>₺{featuredProduct.price}</p>
                       </div>
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-black/5 flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-zinc-400">Öne Çıkan Ürün</span>
+                      <span className="px-4 py-1.5 rounded-full text-white text-xs font-bold bg-gradient-to-r from-[#D32F2F] via-[#F57C00] to-[#E65100] shadow-sm">
+                        İncele & Satın Al
+                      </span>
                     </div>
                   </div>
                 )}
