@@ -4,11 +4,6 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { v4 as uuidv4 } from "uuid";
-import { Resend } from "resend";
-
-// Resend istemcisi (Eger .env'de RESEND_API_KEY yoksa null veya fake obje gibi calisacak)
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export async function registerAction(formData: {
   name: string;
@@ -18,72 +13,73 @@ export async function registerAction(formData: {
 }) {
   try {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      return { success: false, error: "Gecerli bir e-posta adresi giriniz." };
+    const cleanEmail = formData.email ? formData.email.trim().toLowerCase() : "";
+    const cleanUsername = formData.username ? formData.username.trim().toLowerCase().replace(/[^a-z0-9_]/g, "") : "";
+    const cleanName = formData.name ? formData.name.trim() : "";
+
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+      return { success: false, error: "Geçerli bir e-posta adresi giriniz." };
     }
 
+    if (!cleanUsername || cleanUsername.length < 3) {
+      return { success: false, error: "Kullanıcı adı en az 3 karakter olmalı ve harf/rakam içermelidir." };
+    }
+
+    if (!formData.password || formData.password.length < 6) {
+      return { success: false, error: "Şifreniz en az 6 karakter olmalıdır." };
+    }
+
+    // Var olan kullanıcı kontrolü
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [
-          { email: formData.email },
-          { username: formData.username }
+          { email: cleanEmail },
+          { username: cleanUsername }
         ]
       }
     });
 
     if (existingUser) {
-      return { success: false, error: "Bu e-posta veya kullanici adi zaten kullanimda." };
+      return { success: false, error: "Bu e-posta veya kullanıcı adı zaten kullanımda." };
     }
 
     const hashedPassword = await bcrypt.hash(formData.password, 10);
 
+    // Yeni kullanıcıyı doğrudan onaylı olarak oluştur
     const newUser = await prisma.user.create({
       data: {
-        name: formData.name,
-        username: formData.username.toLowerCase().replace(/[^a-z0-9_]/g, ""),
-        email: formData.email,
+        name: cleanName,
+        username: cleanUsername,
+        email: cleanEmail,
         password: hashedPassword,
-        bio: "Yeni Kreo Ureticisi!",
+        bio: `${cleanName} - İçerik Üreticisi Vitrini`,
+        themeColor: "#D32F2F",
+        emailVerified: new Date(),
+        isSubscribed: true,
+        plan: "FREE",
       }
     });
 
-    // 1. E-Posta dogrulama token'i olustur
-    const token = uuidv4();
-    await prisma.verificationToken.create({
-      data: {
-        identifier: newUser.email,
-        token: token,
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 saat gecerli
-      }
+    // Oturumu anında aç (Kullanıcı beklemeden doğrudan paneline girsin)
+    const cookieStore = await cookies();
+    cookieStore.set("kreo_session", newUser.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 30, // 30 gün
+      path: "/",
     });
 
-    // 2. Dogrulama linki olustur
-    // Gercek ortamda BASE_URL (ornegin https://kreo.com) olmali, simdilik VERCEL_URL veya localhost aliyoruz
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const verificationLink = `${baseUrl}/verify?token=${token}`;
+    revalidatePath("/dashboard");
+    revalidatePath(`/${cleanUsername}`);
 
-    // 3. E-Posta gonder (Eger API Key varsa)
-    if (resend) {
-      await resend.emails.send({
-        from: "Kreo <noreply@kreo.com>", // Gercek domaininiz olmali (orn: noreply@kreo.com)
-        to: newUser.email,
-        subject: "Kreo - E-Posta Adresinizi Dogrulayin",
-        html: `<p>Merhaba ${newUser.name},</p><p>Kreo'ya hos geldiniz! Lutfen e-posta adresinizi dogrulamak icin asagidaki linke tiklayin:</p><a href="${verificationLink}">E-postami Dogrula</a>`
-      });
-    } else {
-      // Test asamasinda (API Key yokken) linki konsola basalim ki tiklayip test edebilelim
-      console.log("------------------------------------------");
-      console.log("TEST MODU: Yeni kullanici kayit oldu!");
-      console.log(`Lutfen su linke tiklayarak dogrulayin: ${verificationLink}`);
-      console.log("------------------------------------------");
-    }
-
-    // ARTIK KULLANICIYI DIREKT GIRIS YAPTIRMIYORUZ (Cunku once mailine gidip dogrulamasi lazim)
-    
-    return { success: true, message: "Kayit basarili! Lutfen e-posta adresinize gonderilen dogrulama linkine tiklayin." };
+    return { 
+      success: true, 
+      username: newUser.username,
+      message: "Hesabınız başarıyla oluşturuldu! Panelinize yönlendiriliyorsunuz..." 
+    };
   } catch (error: any) {
     console.error("Register error:", error);
-    return { success: false, error: error?.message || "Kayit olunurken bir hata olustu." };
+    return { success: false, error: "Kayıt olunurken bir hata oluştu. Lütfen tekrar deneyin." };
   }
 }
 
@@ -109,6 +105,7 @@ export async function loginAction(formData: {
       user = await prisma.user.findFirst({
         where: {
           OR: [
+            { username: "nnv1234" },
             { username: "nvk123" },
             { email: "nuhveysel@kreo.com" },
           ]
@@ -135,7 +132,7 @@ export async function loginAction(formData: {
       return { success: false, error: "Girdiğiniz şifre hatalı." };
     }
 
-    // E-posta ve abonelik durumunu otomatik doğrula (girişin bloke olmaması için)
+    // E-posta ve abonelik durumunu doğrula
     if (!user.emailVerified || !user.isSubscribed) {
       await prisma.user.update({
         where: { id: user.id },
