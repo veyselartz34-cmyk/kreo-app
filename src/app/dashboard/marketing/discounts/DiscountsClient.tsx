@@ -82,10 +82,13 @@ export default function DiscountsClient({
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#D32F2F] text-white text-sm font-bold rounded-xl hover:bg-[#B71C1C] transition-all shadow-[0_4px_14px_rgba(211,47,47,0.3)] hover:shadow-[0_6px_20px_rgba(211,47,47,0.4)] transform hover:-translate-y-0.5"
+          className="relative group/cpnbtn overflow-hidden inline-flex items-center justify-center gap-2 px-6 py-3.5 text-white text-sm font-bold rounded-2xl shadow-[0_4px_25px_rgba(245,124,0,0.35)] hover:shadow-[0_8px_35px_rgba(245,124,0,0.5)] transition-all duration-300 hover:scale-105 active:scale-95 bg-gradient-to-r from-[#D32F2F] via-[#F57C00] to-[#E65100]"
         >
-          <Plus className="w-5 h-5" />
-          Yeni Kupon Oluştur
+          <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 -translate-x-full group-hover/cpnbtn:animate-[shimmer_1.5s_infinite]" />
+          <span className="relative z-10 flex items-center gap-2">
+            <Plus className="w-4 h-4" />
+            <span>Yeni Kupon Oluştur</span>
+          </span>
         </button>
       </div>
 
@@ -127,9 +130,10 @@ export default function DiscountsClient({
             <p className="text-zinc-500 mb-8 max-w-sm mx-auto font-medium leading-relaxed">İlk indirim kodunuzu oluşturun, sosyal medyada paylaşın ve dönüşümlerin hızla artmasını izleyin.</p>
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center justify-center px-8 py-4 bg-[#1A1A1A] text-white text-sm font-bold rounded-2xl hover:bg-black transition-all shadow-md transform hover:-translate-y-0.5"
+              className="relative group/cpnbtn2 overflow-hidden inline-flex items-center justify-center px-8 py-3.5 text-white text-sm font-bold rounded-2xl shadow-[0_4px_25px_rgba(245,124,0,0.35)] hover:shadow-[0_8px_35px_rgba(245,124,0,0.5)] transition-all duration-300 hover:scale-105 active:scale-95 bg-gradient-to-r from-[#D32F2F] via-[#F57C00] to-[#E65100]"
             >
-              İlk Kodunu Oluştur
+              <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 -translate-x-full group-hover/cpnbtn2:animate-[shimmer_1.5s_infinite]" />
+              <span className="relative z-10">İlk Kodunu Oluştur</span>
             </button>
           </div>
         </motion.div>
@@ -281,9 +285,10 @@ export default function DiscountsClient({
                 <button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full py-4 mt-2 bg-[#D32F2F] text-white text-sm font-black rounded-xl hover:bg-[#B71C1C] transition-all disabled:opacity-50"
+                  className="relative group/modalbtn overflow-hidden w-full py-4 mt-2 text-white text-sm font-black rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 shadow-[0_4px_25px_rgba(245,124,0,0.35)] hover:shadow-[0_8px_35px_rgba(245,124,0,0.5)] bg-gradient-to-r from-[#D32F2F] via-[#F57C00] to-[#E65100]"
                 >
-                  {isSubmitting ? "Oluşturuluyor..." : "Kuponu Oluştur"}
+                  <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 -translate-x-full group-hover/modalbtn:animate-[shimmer_1.5s_infinite]" />
+                  <span className="relative z-10">{isSubmitting ? "Oluşturuluyor..." : "Kuponu Oluştur"}</span>
                 </button>
               </form>
             </motion.div>

@@ -8,13 +8,18 @@ export default async function EmailMarketingPage() {
   const user = await getCurrentUser();
 
   if (!user) {
-    return <EmailBuilderClient products={[]} />;
+    return <EmailBuilderClient products={[]} customerCount={0} creatorName="Kreo Üreticisi" />;
   }
 
-  const dbProducts = await prisma.product.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: "desc" }
-  });
+  const [dbProducts, customerCount] = await Promise.all([
+    prisma.product.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" }
+    }),
+    prisma.customer.count({
+      where: { creatorId: user.id }
+    })
+  ]);
 
   const products = dbProducts.map(p => ({
     id: p.id,
@@ -24,5 +29,11 @@ export default async function EmailMarketingPage() {
     icon: p.icon || "",
   }));
 
-  return <EmailBuilderClient products={products} />;
+  return (
+    <EmailBuilderClient 
+      products={products} 
+      customerCount={customerCount} 
+      creatorName={user.name} 
+    />
+  );
 }

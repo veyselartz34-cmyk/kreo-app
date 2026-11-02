@@ -455,16 +455,19 @@ export default function NewProductPage() {
               type="button"
               onClick={handleSave}
               disabled={!title || !price || isSubmitting}
-              className={`w-full flex items-center justify-center gap-2 px-6 py-4 text-white text-sm font-black rounded-2xl transition-all shadow-xl active:scale-95 disabled:opacity-50 disabled:scale-100 ${
-                !title || !price || isSubmitting ? 'bg-zinc-400 shadow-none cursor-not-allowed' : 'bg-[#D32F2F] hover:bg-[#B71C1C] shadow-red-500/30'
+              className={`relative group/pubbtn overflow-hidden w-full flex items-center justify-center gap-2 px-6 py-4 text-white text-sm font-black rounded-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 ${
+                !title || !price || isSubmitting 
+                  ? 'bg-zinc-400 shadow-none cursor-not-allowed' 
+                  : 'shadow-[0_4px_25px_rgba(245,124,0,0.35)] hover:shadow-[0_8px_35px_rgba(245,124,0,0.5)] bg-gradient-to-r from-[#D32F2F] via-[#F57C00] to-[#E65100]'
               }`}
             >
+              <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 -translate-x-full group-hover/pubbtn:animate-[shimmer_1.5s_infinite]" />
               {isSaved ? (
-                <><CheckCircle2 className="w-5 h-5 text-white" /> Ürün Yayınlandı!</>
+                <span className="relative z-10 flex items-center gap-2"><CheckCircle2 className="w-5 h-5 text-white" /> Ürün Yayınlandı!</span>
               ) : isSubmitting ? (
-                "Yayınlanıyor..."
+                <span className="relative z-10">Yayınlanıyor...</span>
               ) : (
-                "Ürünü Yayınla"
+                <span className="relative z-10 flex items-center gap-2">Ürünü Hemen Yayınla &rarr;</span>
               )}
             </button>
 
